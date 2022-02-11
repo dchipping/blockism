@@ -1,4 +1,4 @@
-# comp0113-virtual-environment
+# comp0113-virtual-environments
 
 ## Definitions
 
