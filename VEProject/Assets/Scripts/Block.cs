@@ -65,6 +65,7 @@ public class Block : MonoBehaviour, IGraspable
 
     }
 
+    // Estimates percentage of two colliders that are intersecting (may need to be improved)
     private float GetIntersectionPercent(Collider c1, Collider c2)
     {
         if (c1.bounds.Intersects(c2.bounds))
@@ -88,7 +89,6 @@ public class Block : MonoBehaviour, IGraspable
             float smallestVolumn = Math.Min(volumn1, volumn2);
 
             // Return an estimate of the percent of two colliders are intersecting each other
-            Debug.Log(smallestVolumn / (x_intersection * y_intersection * z_intersection));
             return smallestVolumn / (x_intersection * y_intersection * z_intersection);
         }
 
