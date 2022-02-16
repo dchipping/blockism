@@ -9,6 +9,7 @@ public class Block : MonoBehaviour, IGraspable
 {
 
     private Hand grasped;
+    public List<HitBox> hitboxes;
 
     //private Rigidbody rigidbody;
     //public List<HitBox> hitBoxes;
@@ -44,9 +45,24 @@ public class Block : MonoBehaviour, IGraspable
             transform.rotation = grasped.transform.rotation;
 
             // Check hitboxes
-            //for (HitBox hitbox in hitBoxes){
-            //    hitbox.
-            //}
+            bool allFilled = true;
+            foreach (HitBox hitbox in hitboxes)
+            {
+                if (hitbox.filled == false)
+                {
+                    allFilled = false;
+                    break;
+                }
+            }
+
+            // If all hitboxes are filled then create the structure
+            if (allFilled)
+            {
+                foreach (HitBox hitbox in hitboxes)
+                {
+                    hitbox.FillHitBox();
+                }
+            }
         }
 
 

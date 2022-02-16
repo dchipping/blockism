@@ -6,30 +6,52 @@ using UnityEngine;
 public class HitBox : MonoBehaviour
 {
 
-    public GameObject m_MyObject, m_NewObject;
-    Collider m_Collider, m_Collider2;
+    public GameObject thisHitBox;
+    public List<GameObject> pieces;
+    Collider thisCollider;
+    List<Collider> pieceColliders = new List<Collider>();
+    public bool filled;
+    int fillingObject;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        //Check that the first GameObject exists in the Inspector and fetch the Collider
-        if (m_MyObject != null)
-            m_Collider = m_MyObject.GetComponent<Collider>();
+        //Check that the peice GameObject exists and fetch the Collider
+        foreach (GameObject obj in pieces) {
+            pieceColliders.Add(obj.GetComponent<Collider>());
+        }
 
-        //Check that the second GameObject exists in the Inspector and fetch the Collider
-        if (m_NewObject != null)
-            m_Collider2 = m_NewObject.GetComponent<Collider>();
+        //Check that the hitbox GameObject exists in the Inspector and fetch the Collider
+        if (thisHitBox != null)
+            thisCollider = thisHitBox.GetComponent<Collider>();
+
+        filled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (GetIntersectionPercent(m_Collider, m_Collider2) > 0.75)
+        bool filledFlag = false;
+        int filledIdx = -1;
+        for (int i = 0; i < pieceColliders.Count; i++)
         {
-            m_MyObject.transform.position = m_NewObject.transform.position;
-            m_MyObject.transform.rotation = m_NewObject.transform.rotation;
-            m_MyObject.transform.SetParent(m_NewObject.transform);
+            Collider collider = pieceColliders[i];
+            if (GetIntersectionPercent(collider, thisCollider) > 0.75)
+            {
+                filledFlag = true;
+                filledIdx = i;
+            }
         }
+        filled = filledFlag;
+        fillingObject = filledIdx;
+    }
+
+    public void FillHitBox()
+    {
+        pieces[fillingObject].transform.position = thisHitBox.transform.position;
+        pieces[fillingObject].transform.rotation = thisHitBox.transform.rotation;
+        pieces[fillingObject].transform.SetParent(thisHitBox.transform);
     }
 
     // Estimates percentage of two colliders that are intersecting (may need to be improved)
