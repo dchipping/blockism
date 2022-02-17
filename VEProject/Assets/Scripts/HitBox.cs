@@ -6,7 +6,7 @@ using UnityEngine;
 public class HitBox : MonoBehaviour
 {
 
-    public GameObject thisHitBox;
+    private GameObject thisHitBox;
     public List<GameObject> pieces;
     Collider thisCollider;
     List<Collider> pieceColliders = new List<Collider>();
@@ -23,6 +23,7 @@ public class HitBox : MonoBehaviour
         }
 
         //Check that the hitbox GameObject exists in the Inspector and fetch the Collider
+        thisHitBox = gameObject;
         if (thisHitBox != null)
             thisCollider = thisHitBox.GetComponent<Collider>();
 
@@ -81,7 +82,6 @@ public class HitBox : MonoBehaviour
             Debug.Log(smallestVolumn / (x_intersection * y_intersection * z_intersection));
             return smallestVolumn / (x_intersection * y_intersection * z_intersection);
         }
-
 
         return 0;
     }
