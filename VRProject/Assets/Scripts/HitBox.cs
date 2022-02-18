@@ -10,8 +10,6 @@ public class HitBox : MonoBehaviour
     public List<GameObject> pieces;
     Collider thisCollider;
     List<Collider> pieceColliders = new List<Collider>();
-    public bool filled;
-    int fillingObject;
 
 
     // Start is called before the first frame update
@@ -27,32 +25,26 @@ public class HitBox : MonoBehaviour
         if (thisHitBox != null)
             thisCollider = thisHitBox.GetComponent<Collider>();
 
-        filled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        bool filledFlag = false;
-        int filledIdx = -1;
         for (int i = 0; i < pieceColliders.Count; i++)
         {
             Collider collider = pieceColliders[i];
             if (GetIntersectionPercent(collider, thisCollider) > 0.75)
             {
-                filledFlag = true;
-                filledIdx = i;
+                FillHitBox(pieces[i]);
             }
         }
-        filled = filledFlag;
-        fillingObject = filledIdx;
     }
 
-    public void FillHitBox()
+    public void FillHitBox(GameObject piece)
     {
-        pieces[fillingObject].transform.position = thisHitBox.transform.position;
-        pieces[fillingObject].transform.rotation = thisHitBox.transform.rotation;
-        pieces[fillingObject].transform.SetParent(thisHitBox.transform);
+        piece.transform.position = thisHitBox.transform.position;
+        piece.transform.rotation = thisHitBox.transform.rotation;
+        piece.transform.SetParent(thisHitBox.transform);
     }
 
     // Estimates percentage of two colliders that are intersecting (may need to be improved)
