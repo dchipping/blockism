@@ -8,6 +8,7 @@ public class HitBox : MonoBehaviour
 
     private GameObject thisHitBox;
     public List<GameObject> pieces;
+    public float hitboxThreshold;
     Collider thisCollider;
     List<Collider> pieceColliders = new List<Collider>();
 
@@ -33,7 +34,7 @@ public class HitBox : MonoBehaviour
         for (int i = 0; i < pieceColliders.Count; i++)
         {
             Collider collider = pieceColliders[i];
-            if (GetIntersectionPercent(collider, thisCollider) > 0.75)
+            if (GetIntersectionPercent(collider, thisCollider) > hitboxThreshold)
             {
                 FillHitBox(pieces[i]);
             }
