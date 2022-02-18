@@ -5,22 +5,31 @@ using Ubiq.Messaging;
 using Ubiq.XR;
 using System;
 
-public class Block : MonoBehaviour, IGraspable
+public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObject
 {
 
     private Hand grasped;
 
-    //private Rigidbody rigidbody;
-    //public List<HitBox> hitBoxes;
+    NetworkId INetworkObject.Id => new NetworkId(1001);
+    private NetworkContext context;
 
-    //enum BlockClass { RED, YELLOW };
-    //BlockClass colour;
+    struct Message
+    {
+        public Vector3 position;
+        public Quaternion rotation;
+    }
+
+    void INetworkComponent.ProcessMessage(ReferenceCountedSceneGraphMessage message)
+    {
+        var msg = message.FromJson<Message>();
+        transform.localPosition = msg.position;
+        transform.rotation = msg.rotation;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        // Set the rigidbody from the block - rigidbody controls the physics
-        //rigidbody = gameObject.GetComponent<Rigidbody>();
+        context = NetworkScene.Register(this);
     }
 
     void IGraspable.Grasp(Hand controller)
@@ -42,10 +51,12 @@ public class Block : MonoBehaviour, IGraspable
             // Match the position and orientation of the hand
             transform.localPosition = grasped.transform.position;
             transform.rotation = grasped.transform.rotation;
+
+            // Networking code
+            Message message;
+            message.position = transform.localPosition;
+            message.rotation = transform.rotation;
+            context.SendJson(message);
         }
-
-
-        //If the first GameObject's Bounds enters the second GameObject's Bounds, output the message
-
     }
 }
