@@ -60,6 +60,10 @@
 ### Environments
 - Create boxed world
 - Add texturing graphics to look like factory
+- Area for conveyor belt 
+- Area for structure submission
+- Island wall to render blueprints on
+- Area for boss NPC
 
 ### Story
 - Boss NPC
