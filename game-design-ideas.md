@@ -71,6 +71,10 @@
 
 ---
 
+## Environment Layout
+![layout](layout.png)
+---
+
 ## Archived Ideas
 - Escape the Room: Use objects to escape through a hatch/rising water etc.
     - Factory is designed as Maze so players have to find blocks
