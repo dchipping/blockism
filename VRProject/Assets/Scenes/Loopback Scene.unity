@@ -276,6 +276,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73242babe6e344ee9a6245af3c6b58c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &570905705
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1608,6 +1611,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73242babe6e344ee9a6245af3c6b58c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1204330179
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2311,6 +2317,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73242babe6e344ee9a6245af3c6b58c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1711826259
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2436,6 +2445,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73242babe6e344ee9a6245af3c6b58c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1797659931
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2528,6 +2540,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73242babe6e344ee9a6245af3c6b58c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1815538410
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2653,6 +2668,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73242babe6e344ee9a6245af3c6b58c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1904029436
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3257,6 +3275,11 @@ PrefabInstance:
         type: 3}
       propertyPath: servers.Array.data[0].send_to_ip
       value: localhost
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068762446378101730, guid: 2fb578800afc87244b5ba3a0fbbd11c0,
+        type: 3}
+      propertyPath: servers.Array.data[0].send_to_port
+      value: 8005
       objectReference: {fileID: 0}
     - target: {fileID: 7068762446378101732, guid: 2fb578800afc87244b5ba3a0fbbd11c0,
         type: 3}

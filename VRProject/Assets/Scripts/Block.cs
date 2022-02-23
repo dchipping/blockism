@@ -68,16 +68,14 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         if (peer.UUID == client.Me.UUID)
         {
             return; 
-        } else
-        {
-            Message message;
-            message.position = transform.localPosition;
-            message.rotation = transform.rotation;
-            message.who = shared_id;
-
-            context.SendJson(message);
         }
 
+        Message message;
+        message.position = transform.localPosition;
+        message.rotation = transform.rotation;
+        message.who = shared_id;
+
+        context.SendJson(message);
     }
 
     void IGraspable.Grasp(Hand controller)
