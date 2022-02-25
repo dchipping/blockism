@@ -7,10 +7,13 @@ public class HitBox : MonoBehaviour
 {
 
     private GameObject thisHitBox;
+    private Block parentBlock;
     public List<GameObject> pieces;
     public float hitboxThreshold;
     Collider thisCollider;
     List<Collider> pieceColliders = new List<Collider>();
+
+    bool attached;
 
 
     // Start is called before the first frame update
@@ -26,6 +29,14 @@ public class HitBox : MonoBehaviour
         if (thisHitBox != null)
             thisCollider = thisHitBox.GetComponent<Collider>();
 
+        try
+        {
+            parentBlock = transform.parent.gameObject.GetComponent<Block>();
+        }
+        catch (Exception ex)
+        {
+            parentBlock = null;
+        } 
     }
 
     // Update is called once per frame
@@ -34,18 +45,98 @@ public class HitBox : MonoBehaviour
         for (int i = 0; i < pieceColliders.Count; i++)
         {
             Collider collider = pieceColliders[i];
-            if (GetIntersectionPercent(collider, thisCollider) > hitboxThreshold)
+            if (GetIntersectionPercent(collider, thisCollider) > hitboxThreshold && !attached)
             {
                 FillHitBox(pieces[i]);
             }
         }
     }
 
-    public void FillHitBox(GameObject piece)
+    public void FillHitBox(GameObject other)
     {
-        piece.transform.position = thisHitBox.transform.position;
-        piece.transform.rotation = thisHitBox.transform.rotation;
-        piece.transform.SetParent(thisHitBox.transform);
+
+
+
+        // Define blocks and any structures they have
+        Block otherBlock = other.GetComponent<Block>();
+        GameObject parentBlockStruct = (parentBlock.structureObject != null ? parentBlock.structureObject : null);
+        GameObject otherBlockStruct = (otherBlock.structureObject != null ? otherBlock.structureObject : null);
+
+        if (!attached)
+        {
+            if (parentBlockStruct == null && otherBlockStruct == null)
+            {
+                // Remove grasping hand
+                otherBlock.grasped = null;
+
+                // Fill hitbox
+                other.transform.position = thisHitBox.transform.position;
+                other.transform.rotation = thisHitBox.transform.rotation;
+
+                // Create new structure game object
+                GameObject newStruct = new GameObject();
+                otherBlock.structureObject = newStruct;
+                parentBlock.structureObject = newStruct;
+
+                // Add script to game object
+                newStruct.AddComponent<Structure>();
+                Structure structScript = newStruct.GetComponent<Structure>();
+                structScript.children = new List<GameObject>();
+
+                // Set a common parent
+                other.transform.SetParent(newStruct.transform);
+                transform.parent.SetParent(newStruct.transform);
+                structScript.children.Add(other);
+                structScript.children.Add(transform.parent.gameObject);
+
+            }
+            else if (parentBlockStruct != null && otherBlockStruct == null)
+            {
+                // Get structure object
+                Structure structure = parentBlockStruct.GetComponent<Structure>();
+
+                // Set parents
+                other.transform.SetParent(parentBlockStruct.transform);
+                otherBlock.structureObject = parentBlockStruct;
+                structure.children.Add(other);
+            }
+            else if (parentBlockStruct == null && otherBlockStruct != null)
+            {
+                // Get structure object that has already been defined
+                Structure structure = otherBlockStruct.GetComponent<Structure>();
+
+                // Set parents/children
+                transform.parent.gameObject.transform.SetParent(otherBlockStruct.transform);
+                parentBlock.structureObject = parentBlockStruct;
+                structure.children.Add(transform.parent.gameObject);
+            }
+            else
+            {
+                
+                // Change position of entire sturcture  
+                Vector3 positionOffset = other.transform.position - thisHitBox.transform.position;
+                otherBlockStruct.transform.position = otherBlockStruct.transform.position - positionOffset;
+
+                // Change rotation of the entire structure
+                Vector3 rotationalOffset = other.transform.rotation.eulerAngles - thisHitBox.transform.rotation.eulerAngles;
+                otherBlockStruct.transform.RotateAround(other.transform.position, new Vector3(1, 0, 0), -rotationalOffset.x);
+                otherBlockStruct.transform.RotateAround(other.transform.position, new Vector3(0, 1, 0), -rotationalOffset.y);
+                otherBlockStruct.transform.RotateAround(other.transform.position, new Vector3(0, 0, 1), -rotationalOffset.z);
+
+
+                // Move all children GameObjects into a common GameObject
+                Structure structure = parentBlockStruct.GetComponent<Structure>();
+                foreach (GameObject child in structure.children)
+                {
+                    child.transform.SetParent(otherBlockStruct.transform);
+                    Block childBlock = child.GetComponent<Block>();
+                    childBlock.structureObject = otherBlockStruct;
+                }
+            }
+
+
+            attached = true;
+        }
     }
 
     // Estimates percentage of two colliders that are intersecting (may need to be improved)

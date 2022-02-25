@@ -8,7 +8,9 @@ using System;
 public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObject
 {
 
-    private Hand grasped;
+    public GameObject structureObject;
+
+    public Hand grasped;
 
     NetworkId INetworkObject.Id => new NetworkId(1001);
     private NetworkContext context;
@@ -22,7 +24,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
     void INetworkComponent.ProcessMessage(ReferenceCountedSceneGraphMessage message)
     {
         var msg = message.FromJson<Message>();
-        transform.localPosition = msg.position;
+        transform.position = msg.position;
         transform.rotation = msg.rotation;
     }
 
@@ -49,12 +51,12 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         if (grasped)
         {
             // Match the position and orientation of the hand
-            transform.localPosition = grasped.transform.position;
+            transform.position = grasped.transform.position;
             transform.rotation = grasped.transform.rotation;
 
             // Networking code
             Message message;
-            message.position = transform.localPosition;
+            message.position = transform.position;
             message.rotation = transform.rotation;
             context.SendJson(message);
         }
