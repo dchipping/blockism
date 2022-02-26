@@ -12,6 +12,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     public Hand grasped;
 
+
     NetworkId INetworkObject.Id => new NetworkId(1001);
     private NetworkContext context;
 
@@ -50,9 +51,18 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         // If the block is held by a player
         if (grasped)
         {
-            // Match the position and orientation of the hand
-            transform.position = grasped.transform.position;
-            transform.rotation = grasped.transform.rotation;
+            if (structureObject == null)
+            {
+                // Match the position and orientation of the hand
+                transform.position = grasped.transform.position;
+                transform.rotation = grasped.transform.rotation;
+            }
+            else
+            {
+                // Match the position and orientation of the hand
+                structureObject.transform.position = grasped.transform.position;
+                structureObject.transform.rotation = grasped.transform.rotation;
+            }
 
             // Networking code
             Message message;
