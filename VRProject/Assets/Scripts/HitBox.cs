@@ -140,6 +140,18 @@ public class HitBox : MonoBehaviour
                 otherBlockStruct.transform.RotateAround(other.transform.position, new Vector3(0, 1, 0), -rotationalOffset.y);
                 otherBlockStruct.transform.RotateAround(other.transform.position, new Vector3(0, 0, 1), -rotationalOffset.z);
 
+                //Re adjust angle is nessesary
+                rotationalOffset = other.transform.rotation.eulerAngles - thisHitBox.transform.rotation.eulerAngles;
+                if (rotationalOffset.magnitude > 0.01)
+                {
+                    rotationalOffset.x = ClampTo180DegreeRange(rotationalOffset.x);
+                    rotationalOffset.y = ClampTo180DegreeRange(rotationalOffset.y);
+                    rotationalOffset.z = ClampTo180DegreeRange(rotationalOffset.z);
+                    otherBlockStruct.transform.RotateAround(other.transform.position, new Vector3(1, 0, 0), rotationalOffset.x);
+                    otherBlockStruct.transform.RotateAround(other.transform.position, new Vector3(0, 1, 0), rotationalOffset.y);
+                    otherBlockStruct.transform.RotateAround(other.transform.position, new Vector3(0, 0, 1), rotationalOffset.z);
+                }
+
                 // Set parents/children
                 transform.parent.gameObject.transform.SetParent(otherBlockStruct.transform);
                 parentBlock.structureObject = parentBlockStruct;
@@ -169,7 +181,18 @@ public class HitBox : MonoBehaviour
                 otherBlockStruct.transform.RotateAround(other.transform.position, new Vector3(1, 0, 0), -rotationalOffset.x);
                 otherBlockStruct.transform.RotateAround(other.transform.position, new Vector3(0, 1, 0), -rotationalOffset.y);
                 otherBlockStruct.transform.RotateAround(other.transform.position, new Vector3(0, 0, 1), -rotationalOffset.z);
-                
+
+                //Re adjust angle is nessesary
+                rotationalOffset = other.transform.rotation.eulerAngles - thisHitBox.transform.rotation.eulerAngles;
+                if (rotationalOffset.magnitude > 0.01)
+                {
+                    rotationalOffset.x = ClampTo180DegreeRange(rotationalOffset.x);
+                    rotationalOffset.y = ClampTo180DegreeRange(rotationalOffset.y);
+                    rotationalOffset.z = ClampTo180DegreeRange(rotationalOffset.z);
+                    otherBlockStruct.transform.RotateAround(other.transform.position, new Vector3(1, 0, 0), rotationalOffset.x);
+                    otherBlockStruct.transform.RotateAround(other.transform.position, new Vector3(0, 1, 0), rotationalOffset.y);
+                    otherBlockStruct.transform.RotateAround(other.transform.position, new Vector3(0, 0, 1), rotationalOffset.z);
+                }
 
                 // Move all children GameObjects into a common GameObject
                 foreach (GameObject child in parentStructure.children)
