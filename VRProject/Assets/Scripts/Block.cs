@@ -27,12 +27,14 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         public NetworkId who; 
         public Vector3 position;
         public Quaternion rotation;
+        public bool owner; 
 
-        public Message(Vector3 pos, Quaternion rot, NetworkId who)
+        public Message(Vector3 pos, Quaternion rot, NetworkId who, bool owner)
         {
             this.who = who;
             this.position = pos;
-            this.rotation = rot; 
+            this.rotation = rot;
+            this.owner = owner; 
         }
     }
 
@@ -46,6 +48,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         {
             transform.localPosition = msg.position;
             transform.rotation = msg.rotation;
+            owner = msg.owner; 
         } 
     }
 
@@ -58,36 +61,55 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
         client.OnPeerAdded.AddListener(OnPeerAdded);
 
-        shared_id = new NetworkId((uint)(Math.Pow(10, 5)*(transform.localPosition.x + 
+        shared_id = new NetworkId((uint)(Math.Pow(10, 3)*(transform.localPosition.x + 
                                         transform.localPosition.y + 
                                         transform.localPosition.z) ));
     }
 
+    private void SendMessageUpdate()
+    {
+        Message message;
+        message.position = transform.localPosition;
+        message.rotation = transform.rotation;
+        message.who = shared_id;
+        message.owner = owner;
+
+        context.SendJson(message);
+    }
+
     private void OnPeerAdded(IPeer peer)
     {
+        Debug.Log("peer added ID : " + peer.UUID);
+
+        Debug.Log("client peer ID : " + client.Me.UUID);
+
         if (peer.UUID == client.Me.UUID)
         {
             return; 
         }
 
-        Message message;
-        message.position = transform.localPosition;
-        message.rotation = transform.rotation;
-        message.who = shared_id;
-
-        context.SendJson(message);
+        SendMessageUpdate();
     }
 
     void IGraspable.Grasp(Hand controller)
     {
+        if (owner)
+        {
+            return; 
+        }
+
         grasped = controller;
-        owner = true; 
+        owner = true;
+
+        SendMessageUpdate();
     }
 
     void IGraspable.Release(Hand controller)
     {
         grasped = null;
-        owner = false; 
+        owner = false;
+
+        SendMessageUpdate();
     }
 
     // Update is called once per frame
@@ -101,12 +123,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
             transform.rotation = grasped.transform.rotation;
 
             // Networking code
-            Message message;
-            message.position = transform.localPosition;
-            message.rotation = transform.rotation;
-            message.who = shared_id; 
-
-            context.SendJson(message);
+            SendMessageUpdate();
         }
     }
 }
