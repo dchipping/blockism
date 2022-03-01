@@ -20,21 +20,25 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     private RoomClient client;
 
-    private bool owner = false; 
+    private string last_owner_id; 
+
+    private bool being_grasped = false; 
 
     struct Message
     {
         public NetworkId who; 
         public Vector3 position;
         public Quaternion rotation;
-        public bool owner; 
+        public bool being_grasped;
+        public string last_owner_id;
 
-        public Message(Vector3 pos, Quaternion rot, NetworkId who, bool owner)
+        public Message(Vector3 pos, Quaternion rot, NetworkId who, bool bg, string lo_id)
         {
             this.who = who;
             this.position = pos;
             this.rotation = rot;
-            this.owner = owner; 
+            this.being_grasped = bg;
+            this.last_owner_id = lo_id;
         }
     }
 
@@ -48,7 +52,8 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         {
             transform.localPosition = msg.position;
             transform.rotation = msg.rotation;
-            owner = msg.owner; 
+            being_grasped = msg.being_grasped;
+            last_owner_id = msg.last_owner_id;
         } 
     }
 
@@ -72,34 +77,32 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         message.position = transform.localPosition;
         message.rotation = transform.rotation;
         message.who = shared_id;
-        message.owner = owner;
+        message.being_grasped = being_grasped;
+        message.last_owner_id = last_owner_id;
 
         context.SendJson(message);
     }
 
     private void OnPeerAdded(IPeer peer)
     {
-        Debug.Log("peer added ID : " + peer.UUID);
 
-        Debug.Log("client peer ID : " + client.Me.UUID);
-
-        if (peer.UUID == client.Me.UUID)
+        if (client.Me.UUID == last_owner_id)
         {
-            return; 
+            SendMessageUpdate();
         }
-
-        SendMessageUpdate();
     }
 
     void IGraspable.Grasp(Hand controller)
     {
-        if (owner)
+        if (being_grasped)
         {
             return; 
         }
 
         grasped = controller;
-        owner = true;
+        being_grasped = true;
+
+        last_owner_id = client.Me.UUID;
 
         SendMessageUpdate();
     }
@@ -107,7 +110,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
     void IGraspable.Release(Hand controller)
     {
         grasped = null;
-        owner = false;
+        being_grasped = false;
 
         SendMessageUpdate();
     }
@@ -116,7 +119,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
     void Update()
     {
         // If the block is held by a player
-        if (grasped && owner)
+        if (being_grasped && grasped)
         {
             // Match the position and orientation of the hand
             transform.localPosition = grasped.transform.position;
