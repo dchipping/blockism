@@ -9,7 +9,7 @@ using Ubiq.Rooms;
 public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObject
 {
 
-    private Hand grasped;
+    public Hand grasped;
 
     private NetworkContext context;
 
@@ -122,7 +122,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         if (being_grasped && grasped)
         {
             // Match the position and orientation of the hand
-            transform.localPosition = grasped.transform.position;
+            transform.position = grasped.transform.position;
             transform.rotation = grasped.transform.rotation;
 
             // Networking code

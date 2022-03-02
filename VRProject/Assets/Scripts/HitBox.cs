@@ -10,6 +10,7 @@ public class HitBox : MonoBehaviour
     public List<GameObject> pieces;
     Collider thisCollider;
     List<Collider> pieceColliders = new List<Collider>();
+    bool filled = false;
 
 
     // Start is called before the first frame update
@@ -33,9 +34,10 @@ public class HitBox : MonoBehaviour
         for (int i = 0; i < pieceColliders.Count; i++)
         {
             Collider collider = pieceColliders[i];
-            if (GetIntersectionPercent(collider, thisCollider) > 0.75)
+            if (GetIntersectionPercent(collider, thisCollider) > 0.75 && !filled)
             {
                 FillHitBox(pieces[i]);
+                filled = true;
             }
         }
     }
@@ -45,6 +47,16 @@ public class HitBox : MonoBehaviour
         piece.transform.position = thisHitBox.transform.position;
         piece.transform.rotation = thisHitBox.transform.rotation;
         piece.transform.SetParent(thisHitBox.transform);
+
+        try
+        {
+            Block b = piece.GetComponent<Block>();
+            b.grasped = null;
+        }
+        catch
+        {
+
+        }
     }
 
     // Estimates percentage of two colliders that are intersecting (may need to be improved)
