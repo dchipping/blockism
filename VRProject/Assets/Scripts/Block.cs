@@ -13,6 +13,8 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     private NetworkContext context;
 
+    public Block rootBlock = null;
+
     // 16-digit hex
     NetworkId INetworkObject.Id => new NetworkId("f8cdefa3a15f5e6d");
 
@@ -94,7 +96,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     void IGraspable.Grasp(Hand controller)
     {
-        if (being_grasped)
+        if (being_grasped || rootBlock != null)
         {
             return; 
         }

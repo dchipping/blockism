@@ -34,7 +34,7 @@ public class HitBox : MonoBehaviour
         for (int i = 0; i < pieceColliders.Count; i++)
         {
             Collider collider = pieceColliders[i];
-            if (GetIntersectionPercent(collider, thisCollider) > 0.75 && !filled)
+            if (GetIntersectionPercent(collider, thisCollider) > 0.5 && !filled)
             {
                 FillHitBox(pieces[i]);
                 filled = true;
@@ -44,19 +44,24 @@ public class HitBox : MonoBehaviour
 
     public void FillHitBox(GameObject piece)
     {
+        // Set parent of connection peice to this hitbox
         piece.transform.position = thisHitBox.transform.position;
         piece.transform.rotation = thisHitBox.transform.rotation;
         piece.transform.SetParent(thisHitBox.transform);
 
-        try
-        {
-            Block b = piece.GetComponent<Block>();
-            b.grasped = null;
-        }
-        catch
-        {
 
-        }
+        //Remove rigid body from connecting peice
+        var rb = piece.GetComponent<Rigidbody>();
+        Destroy(rb);
+
+        // Remove grasp for both players
+        Block b = piece.GetComponent<Block>();
+        b.grasped = null;
+        Block parentBlock = transform.parent.GetComponent<Block>();
+        parentBlock.grasped = null;
+
+        // Remove block script from connecting peice
+        //b.rootBlock = parentBlock;
     }
 
     // Estimates percentage of two colliders that are intersecting (may need to be improved)
