@@ -56,9 +56,9 @@ public class HitBox : MonoBehaviour
 
         // Remove grasp for both players
         Block b = piece.GetComponent<Block>();
-        b.grasped = null;
+        b.Release();
         Block parentBlock = transform.parent.GetComponent<Block>();
-        parentBlock.grasped = null;
+        parentBlock.Release();
 
         // Remove block script from connecting peice
         //b.rootBlock = parentBlock;

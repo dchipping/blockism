@@ -120,9 +120,15 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     void IGraspable.Release(Hand controller)
     {
+        Release();
+    }
+
+    public void Release()
+    {
         grasped = null;
         being_grasped = false;
-        rb.isKinematic = false; 
+        if (rootBlock == null)
+            rb.isKinematic = false;
 
         SendMessageUpdate();
     }
