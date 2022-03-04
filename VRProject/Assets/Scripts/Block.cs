@@ -24,7 +24,9 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     private string last_owner_id; 
 
-    private bool being_grasped = false; 
+    private bool being_grasped = false;
+
+    private Rigidbody rb; 
 
     struct Message
     {
@@ -33,14 +35,16 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         public Quaternion rotation;
         public bool being_grasped;
         public string last_owner_id;
+        public bool is_kinematic; 
 
-        public Message(Vector3 pos, Quaternion rot, NetworkId who, bool bg, string lo_id)
+        public Message(Vector3 pos, Quaternion rot, NetworkId who, bool bg, string lo_id, bool is_kinematic)
         {
             this.who = who;
             this.position = pos;
             this.rotation = rot;
             this.being_grasped = bg;
             this.last_owner_id = lo_id;
+            this.is_kinematic = is_kinematic;
         }
     }
 
@@ -56,6 +60,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
             transform.rotation = msg.rotation;
             being_grasped = msg.being_grasped;
             last_owner_id = msg.last_owner_id;
+            rb.isKinematic = msg.is_kinematic;
         } 
     }
 
@@ -71,6 +76,8 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         shared_id = new NetworkId((uint)(Math.Pow(10, 3)*(transform.localPosition.x + 
                                         transform.localPosition.y + 
                                         transform.localPosition.z) ));
+
+        rb = GetComponent<Rigidbody>();
     }
 
     private void SendMessageUpdate()
@@ -81,6 +88,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         message.who = shared_id;
         message.being_grasped = being_grasped;
         message.last_owner_id = last_owner_id;
+        message.is_kinematic = rb.isKinematic;
 
         context.SendJson(message);
     }
@@ -103,6 +111,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
         grasped = controller;
         being_grasped = true;
+        rb.isKinematic = true; 
 
         last_owner_id = client.Me.UUID;
 
@@ -113,6 +122,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
     {
         grasped = null;
         being_grasped = false;
+        rb.isKinematic = false; 
 
         SendMessageUpdate();
     }
