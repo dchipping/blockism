@@ -99,6 +99,12 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
             return; 
         }
 
+        BuilderAvatar avatar = controller.GetComponentInParent<BuilderAvatar>();
+        if (!avatar.can_avatar_grasp)
+        {
+            return; 
+        }
+
         grasped = controller;
         being_grasped = true;
 
