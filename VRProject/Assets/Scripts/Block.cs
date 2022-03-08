@@ -26,7 +26,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     private bool being_grasped = false;
 
-    private Rigidbody rb; 
+    public Rigidbody rb; 
 
     struct Message
     {
@@ -78,6 +78,8 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
                                         transform.localPosition.z) ));
 
         rb = GetComponent<Rigidbody>();
+
+        rootBlock = this;
     }
 
     private void SendMessageUpdate()
@@ -88,7 +90,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         message.who = shared_id;
         message.being_grasped = being_grasped;
         message.last_owner_id = last_owner_id;
-        message.is_kinematic = rb.isKinematic;
+        message.is_kinematic = rootBlock.rb.isKinematic;
 
         context.SendJson(message);
     }
@@ -104,14 +106,14 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     void IGraspable.Grasp(Hand controller)
     {
-        if (being_grasped || rootBlock != null)
+        if (being_grasped)
         {
             return; 
         }
 
         grasped = controller;
         being_grasped = true;
-        rb.isKinematic = true; 
+        this.rootBlock.rb.isKinematic = true; 
 
         last_owner_id = client.Me.UUID;
 
@@ -127,8 +129,8 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
     {
         grasped = null;
         being_grasped = false;
-        if (rootBlock == null)
-            rb.isKinematic = false;
+
+        this.rootBlock.rb.isKinematic = false;
 
         SendMessageUpdate();
     }

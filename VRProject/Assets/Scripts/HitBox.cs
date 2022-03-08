@@ -12,7 +12,6 @@ public class HitBox : MonoBehaviour
     List<Collider> pieceColliders = new List<Collider>();
     bool filled = false;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -44,24 +43,28 @@ public class HitBox : MonoBehaviour
 
     public void FillHitBox(GameObject piece)
     {
-        // Set parent of connection peice to this hitbox
-        piece.transform.position = thisHitBox.transform.position;
-        piece.transform.rotation = thisHitBox.transform.rotation;
-        piece.transform.SetParent(thisHitBox.transform);
+        if (!filled)
+        {
+            // Remove grasp for both players
+            Block b = piece.GetComponent<Block>();
+            Block parentBlock = transform.parent.GetComponent<Block>();
+            b.Release();
+            b.rootBlock = parentBlock;
+            parentBlock.Release();
 
+            // Set parent of connection peice to this hitbox
+            piece.transform.position = thisHitBox.transform.position;
+            piece.transform.rotation = thisHitBox.transform.rotation;
+            piece.transform.SetParent(thisHitBox.transform);
 
-        //Remove rigid body from connecting peice
-        var rb = piece.GetComponent<Rigidbody>();
-        Destroy(rb);
+            //Remove rigid body from connecting peice
+            var rb = piece.GetComponent<Rigidbody>();
+            Destroy(rb);
 
-        // Remove grasp for both players
-        Block b = piece.GetComponent<Block>();
-        b.Release();
-        Block parentBlock = transform.parent.GetComponent<Block>();
-        parentBlock.Release();
-
-        // Remove block script from connecting peice
-        //b.rootBlock = parentBlock;
+            //Remove block script from connecting piece
+            //var blk_scr = piece.GetComponent<Block>();
+            //Destroy(blk_scr);
+        }
     }
 
     // Estimates percentage of two colliders that are intersecting (may need to be improved)
