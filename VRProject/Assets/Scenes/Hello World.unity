@@ -154,6 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -264,6 +265,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -595,6 +597,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -722,6 +725,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -849,6 +853,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -1073,6 +1078,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -1200,6 +1206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -1420,6 +1427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -1626,6 +1634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -1772,6 +1781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -2159,6 +2169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -2285,6 +2296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -2582,6 +2594,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -2884,6 +2897,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -3205,6 +3219,54 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1329167863}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1353939952
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1353939954}
+  - component: {fileID: 1353939953}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1353939953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353939952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e6fb813249ea46d9a1d99313eccfbda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickSound:
+  - {fileID: 8300000, guid: 0174ef91f20e54e9283ea94e619f46f6, type: 3}
+  - {fileID: 8300000, guid: 71c6753fe8fe44143b7e638fc5f6b541, type: 3}
+  - {fileID: 8300000, guid: 84057f1e80d924eb6a5d471d6fb37083, type: 3}
+  - {fileID: 8300000, guid: e00797bb3cdc1424bb8cc457a6a0e458, type: 3}
+--- !u!4 &1353939954
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353939952}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.8856018, y: 2.759976, z: -0.405321}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 19
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1482593688
 GameObject:
   m_ObjectHideFlags: 0
@@ -4067,6 +4129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -4194,6 +4257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -4414,6 +4478,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
@@ -4756,6 +4821,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
