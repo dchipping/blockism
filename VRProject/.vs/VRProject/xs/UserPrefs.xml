@@ -1,19 +1,14 @@
 ﻿<Properties StartupConfiguration="{ED4E5404-283F-BF83-1E68-BF8BEFFEADDD}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/HitBox.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Clock.cs">
     <Files>
-      <File FileName="Assets/Scripts/GameManager.cs" Line="22" Column="42" />
+      <File FileName="Assets/Scripts/GameManager.cs" Line="16" Column="39" />
       <File FileName="Assets/Scripts/HitBox.cs" Line="65" Column="1" />
+      <File FileName="Assets/Scripts/Clock.cs" Line="16" Column="9" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="VRProject" expanded="True">
-            <Node name="Assets" expanded="True">
-              <Node name="Scripts" expanded="True">
-                <Node name="HitBox.cs" selected="True" />
-              </Node>
-            </Node>
-          </Node>
+          <Node name="VRProject" expanded="True" selected="True" />
         </State>
       </Pad>
     </Pads>
