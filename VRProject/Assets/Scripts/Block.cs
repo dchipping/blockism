@@ -5,6 +5,7 @@ using Ubiq.Messaging;
 using Ubiq.XR;
 using System;
 using Ubiq.Rooms;
+using System.Linq;
 
 public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObject
 {
@@ -108,6 +109,23 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         {
             return; 
         }
+
+        var avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
+        var avatars = avatar_manager.Avatars;
+        Ubiq.Avatars.Avatar local_avatar = null; 
+
+        foreach (var avatar in avatars)
+        {
+            if (avatar.IsLocal)
+            {
+                local_avatar = avatar;
+            }
+        }
+
+        if (!local_avatar.GetComponentInChildren<BuilderAvatar>().can_avatar_grasp)
+        {
+            return; 
+        } 
 
         grasped = controller;
         being_grasped = true;
