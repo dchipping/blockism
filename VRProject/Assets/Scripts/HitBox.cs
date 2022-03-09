@@ -43,28 +43,25 @@ public class HitBox : MonoBehaviour
 
     public void FillHitBox(GameObject piece)
     {
-        if (!filled)
-        {
-            // Remove grasp for both players
-            Block b = piece.GetComponent<Block>();
-            Block parentBlock = transform.parent.GetComponent<Block>();
-            b.Release();
-            b.rootBlock = parentBlock;
-            parentBlock.Release();
+        // Remove grasp for both players
+        Block b = piece.GetComponent<Block>();
+        Block parentBlock = transform.parent.GetComponent<Block>();
+        b.Release();
+        b.rootBlock = parentBlock;
+        parentBlock.Release();
 
-            // Set parent of connection peice to this hitbox
-            piece.transform.position = thisHitBox.transform.position;
-            piece.transform.rotation = thisHitBox.transform.rotation;
-            piece.transform.SetParent(thisHitBox.transform);
+        // Set parent of connection peice to this hitbox
+        piece.transform.position = thisHitBox.transform.position;
+        piece.transform.rotation = thisHitBox.transform.rotation;
+        piece.transform.SetParent(thisHitBox.transform);
 
-            //Remove rigid body from connecting peice
-            var rb = piece.GetComponent<Rigidbody>();
-            Destroy(rb);
+        //Remove rigid body from connecting peice
+        var rb = piece.GetComponent<Rigidbody>();
+        Destroy(rb);
 
-            //Remove block script from connecting piece
-            //var blk_scr = piece.GetComponent<Block>();
-            //Destroy(blk_scr);
-        }
+        //Remove block script from connecting piece
+        //var blk_scr = piece.GetComponent<Block>();
+        //Destroy(blk_scr);
     }
 
     // Estimates percentage of two colliders that are intersecting (may need to be improved)

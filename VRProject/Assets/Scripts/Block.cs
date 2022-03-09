@@ -142,8 +142,8 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         if (being_grasped && grasped)
         {
             // Match the position and orientation of the hand
-            transform.position = grasped.transform.position;
-            transform.rotation = grasped.transform.rotation;
+            rootBlock.transform.position = grasped.transform.position;
+            rootBlock.transform.rotation = grasped.transform.rotation;
 
             // Networking code
             SendMessageUpdate();
