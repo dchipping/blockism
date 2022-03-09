@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class BuilderAvatar : MonoBehaviour
 {
-    public bool can_avatar_grasp = false; 
+    public string color; 
 
     // Start is called before the first frame update
     void Start()

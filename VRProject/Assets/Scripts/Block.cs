@@ -27,7 +27,9 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     private bool being_grasped = false;
 
-    private Rigidbody rb; 
+    private Rigidbody rb;
+
+    public string color;
 
     struct Message
     {
@@ -122,7 +124,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
             }
         }
 
-        if (!local_avatar.GetComponentInChildren<BuilderAvatar>().can_avatar_grasp)
+        if (local_avatar.GetComponentInChildren<BuilderAvatar>().color != color)
         {
             return; 
         } 

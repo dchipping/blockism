@@ -320,6 +320,7 @@ MonoBehaviour:
   shared_id:
     a: 0
     b: 0
+  color: red
 --- !u!114 &5712193661171127204
 MonoBehaviour:
   m_ObjectHideFlags: 0

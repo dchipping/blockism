@@ -107,9 +107,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73242babe6e344ee9a6245af3c6b58c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
   shared_id:
     a: 0
     b: 0
+  color: yellow
 --- !u!54 &-5442533379549559840
 Rigidbody:
   m_ObjectHideFlags: 0
