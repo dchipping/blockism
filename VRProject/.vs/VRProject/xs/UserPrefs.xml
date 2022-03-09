@@ -1,9 +1,10 @@
 ﻿<Properties StartupConfiguration="{ED4E5404-283F-BF83-1E68-BF8BEFFEADDD}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Clock.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Samples/Ubiq/0.2.0-alpha.4/Samples/Intro/Scripts/SocialMenuRequestHandler.cs">
     <Files>
-      <File FileName="Assets/Scripts/GameManager.cs" Line="16" Column="39" />
+      <File FileName="Assets/Scripts/GameManager.cs" Line="9" Column="1" />
       <File FileName="Assets/Scripts/HitBox.cs" Line="65" Column="1" />
-      <File FileName="Assets/Scripts/Clock.cs" Line="16" Column="9" />
+      <File FileName="Assets/Scripts/Clock.cs" Line="10" Column="12" />
+      <File FileName="Assets/Samples/Ubiq/0.2.0-alpha.4/Samples/Intro/Scripts/SocialMenuRequestHandler.cs" Line="19" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
