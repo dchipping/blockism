@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class BluePrint : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public float RotationSpeed = 20.0f;
 
     // Update is called once per frame
     void Update()
     {
-        
+        transform.Rotate(Vector3.up * RotationSpeed * Time.deltaTime);
     }
 }
