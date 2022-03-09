@@ -215,6 +215,8 @@ GameObject:
   - component: {fileID: 5586808133630709338}
   - component: {fileID: 5586808133630709339}
   - component: {fileID: 5586808133630709336}
+  - component: {fileID: 5712193661171127204}
+  - component: {fileID: -8844441129556620772}
   m_Layer: 0
   m_Name: TableTop
   m_TagString: Untagged
@@ -230,7 +232,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5586808133630709337}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.35, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 0.1, y: 0.05, z: 0.8}
   m_Children:
   - {fileID: 5586808133463625949}
@@ -313,6 +315,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73242babe6e344ee9a6245af3c6b58c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grasped: {fileID: 0}
+  rootBlock: {fileID: 0}
+  shared_id:
+    a: 0
+    b: 0
+  color: red
+--- !u!114 &5712193661171127204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5586808133630709337}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8bbc5ae33e3b7e43911f996b9fac3f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  owner: 1
+  throwStrength: 1
+--- !u!54 &-8844441129556620772
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5586808133630709337}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &5586808133783903652
 GameObject:
   m_ObjectHideFlags: 0

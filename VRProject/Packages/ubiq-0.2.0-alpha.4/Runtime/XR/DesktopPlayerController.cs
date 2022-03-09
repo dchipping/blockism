@@ -17,6 +17,7 @@ namespace Ubiq.XR
         public Camera headCamera;
         public Transform cameraContainer;
         public AnimationCurve cameraRubberBand;
+        public bool walk = true;
 
         [Tooltip("Joystick and Keyboard Speed in m/s")]
         public float movementSpeed = 2f;
@@ -91,9 +92,13 @@ namespace Ubiq.XR
             {
                 movement += new Vector3(0f, 0f, -1f);
             }
+            if (Input.GetKey(KeyCode.Space))
+            {
+                movement += new Vector3(0f, 2f, 0f);
+            }
             movement = movement.normalized * (movementSpeed) * Time.deltaTime;
             movement = headCamera.transform.TransformDirection(movement);
-            movement.y = 0f;
+            //movement.y = 0f;
 
             transform.position += movement;
         }
@@ -127,6 +132,12 @@ namespace Ubiq.XR
             transform.position += velocity * Time.deltaTime;
         }
 
+        private void OnTriggerEnter(Collider obj)
+        {
+            Debug.Log("Trigger!");
+            transform.position += new Vector3(0f, 0f, 0f);
+        }
+
         private void FixedUpdate()
         {
             // Update the foot position. This is done by pulling the feet using a rubber band.
@@ -138,10 +149,12 @@ namespace Ubiq.XR
             userLocalPosition.x += (headProjectionXZ.x - userLocalPosition.x) * Time.deltaTime * cameraRubberBand.Evaluate(Mathf.Abs(headProjectionXZ.x - userLocalPosition.x));
             userLocalPosition.z += (headProjectionXZ.z - userLocalPosition.z) * Time.deltaTime * cameraRubberBand.Evaluate(Mathf.Abs(headProjectionXZ.z - userLocalPosition.z));
             userLocalPosition.y = 0;
+           // Debug.Log("Fixed Update");
         }
 
         private void Update()
         {
+            //Debug.Log("Normal Update");
             // Desktop only
             if (UnityEngine.XR.XRSettings.isDeviceActive)
             {
@@ -152,6 +165,7 @@ namespace Ubiq.XR
 
             OnMouse();
             OnKeys();
+            //OnTriggerEnter();
             //OnGround(); //todo: finish implementation
         }
 

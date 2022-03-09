@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.44487262, g: 0.4944359, b: 0.5736019, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -196,28 +196,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d61f55a1b9a02064ebf167b08e5b22b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Available: []
   servers:
   - listen_on_ip: 
     listen_on_port: 
     send_to_ip: localhost
     send_to_port: 8004
     type: 0
-  me:
-    uuid: 
-    networkObject:
-      a: 0
-      b: 0
-    component: 0
-    properties:
-      keys: []
-      values: []
-  OnJoinedRoom:
-    m_PersistentCalls:
-      m_Calls: []
-  OnRoom:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &187502698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,28 +307,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d61f55a1b9a02064ebf167b08e5b22b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Available: []
   servers:
   - listen_on_ip: 
     listen_on_port: 
     send_to_ip: localhost
     send_to_port: 8004
     type: 0
-  me:
-    uuid: 
-    networkObject:
-      a: 0
-      b: 0
-    component: 0
-    properties:
-      keys: []
-      values: []
-  OnJoinedRoom:
-    m_PersistentCalls:
-      m_Calls: []
-  OnRoom:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &202480398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -357,7 +325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85a8236d1040c2b439f6933935477a9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomClient: {fileID: 202480397}
+  roomClient: {fileID: 187502697}
   catalogue: {fileID: 11400000, guid: e9294dc4382ae304a8ee8961eaa34805, type: 2}
 --- !u!1 &255003618
 GameObject:

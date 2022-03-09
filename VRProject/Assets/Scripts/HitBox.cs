@@ -62,6 +62,9 @@ public class HitBox : MonoBehaviour
         //Remove block script from connecting piece
         //var blk_scr = piece.GetComponent<Block>();
         //Destroy(blk_scr);
+
+        // Play sound effect
+        GameManager.PlayClickFromPoint(transform.position);
     }
 
     // Estimates percentage of two colliders that are intersecting (may need to be improved)
