@@ -5,7 +5,6 @@ using Ubiq.Messaging;
 using Ubiq.XR;
 using System;
 using Ubiq.Rooms;
-using System.Linq;
 
 public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObject
 {
@@ -19,26 +18,26 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
     // 16-digit hex
     NetworkId INetworkObject.Id => new NetworkId("f8cdefa3a15f5e6d");
 
-    public NetworkId shared_id; 
+    public NetworkId shared_id;
 
     private RoomClient client;
 
-    private string last_owner_id; 
+    private string last_owner_id;
 
     private bool being_grasped = false;
 
-    private Rigidbody rb;
+    public Rigidbody rb;
 
     public string color;
 
     struct Message
     {
-        public NetworkId who; 
+        public NetworkId who;
         public Vector3 position;
         public Quaternion rotation;
         public bool being_grasped;
         public string last_owner_id;
-        public bool is_kinematic; 
+        public bool is_kinematic;
 
         public Message(Vector3 pos, Quaternion rot, NetworkId who, bool bg, string lo_id, bool is_kinematic)
         {
@@ -64,7 +63,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
             being_grasped = msg.being_grasped;
             last_owner_id = msg.last_owner_id;
             rb.isKinematic = msg.is_kinematic;
-        } 
+        }
     }
 
     // Start is called before the first frame update
@@ -76,11 +75,13 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
         client.OnPeerAdded.AddListener(OnPeerAdded);
 
-        shared_id = new NetworkId((uint)(Math.Pow(10, 3)*(transform.localPosition.x + 
-                                        transform.localPosition.y + 
-                                        transform.localPosition.z) ));
+        shared_id = new NetworkId((uint)(Math.Pow(10, 3) * (transform.localPosition.x +
+                                        transform.localPosition.y +
+                                        transform.localPosition.z)));
 
         rb = GetComponent<Rigidbody>();
+
+        rootBlock = this;
     }
 
     private void SendMessageUpdate()
@@ -91,7 +92,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         message.who = shared_id;
         message.being_grasped = being_grasped;
         message.last_owner_id = last_owner_id;
-        message.is_kinematic = rb.isKinematic;
+        message.is_kinematic = rootBlock.rb.isKinematic;
 
         context.SendJson(message);
     }
@@ -107,14 +108,14 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     void IGraspable.Grasp(Hand controller)
     {
-        if (being_grasped || rootBlock != null)
+        if (being_grasped)
         {
-            return; 
+            return;
         }
 
         var avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
         var avatars = avatar_manager.Avatars;
-        Ubiq.Avatars.Avatar local_avatar = null; 
+        Ubiq.Avatars.Avatar local_avatar = null;
 
         foreach (var avatar in avatars)
         {
@@ -126,12 +127,12 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
         if (local_avatar.GetComponentInChildren<BuilderAvatar>().color != color)
         {
-            return; 
-        } 
+            return;
+        }
 
         grasped = controller;
         being_grasped = true;
-        rb.isKinematic = true; 
+        rootBlock.rb.isKinematic = true;
 
         last_owner_id = client.Me.UUID;
 
@@ -140,9 +141,15 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     void IGraspable.Release(Hand controller)
     {
+        Release();
+    }
+
+    public void Release()
+    {
         grasped = null;
         being_grasped = false;
-        rb.isKinematic = false; 
+
+        this.rootBlock.rb.isKinematic = false;
 
         SendMessageUpdate();
     }
@@ -154,8 +161,8 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         if (being_grasped && grasped)
         {
             // Match the position and orientation of the hand
-            transform.position = grasped.transform.position;
-            transform.rotation = grasped.transform.rotation;
+            rootBlock.transform.position = grasped.transform.position;
+            rootBlock.transform.rotation = grasped.transform.rotation;
 
             // Networking code
             SendMessageUpdate();

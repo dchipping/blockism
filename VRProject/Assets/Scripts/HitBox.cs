@@ -12,12 +12,12 @@ public class HitBox : MonoBehaviour
     List<Collider> pieceColliders = new List<Collider>();
     bool filled = false;
 
-
     // Start is called before the first frame update
     void Start()
     {
         //Check that the peice GameObject exists and fetch the Collider
-        foreach (GameObject obj in pieces) {
+        foreach (GameObject obj in pieces)
+        {
             pieceColliders.Add(obj.GetComponent<Collider>());
         }
 
@@ -44,24 +44,25 @@ public class HitBox : MonoBehaviour
 
     public void FillHitBox(GameObject piece)
     {
+        // Remove grasp for both players
+        Block b = piece.GetComponent<Block>();
+        Block parentBlock = transform.parent.GetComponent<Block>();
+        b.Release();
+        b.rootBlock = parentBlock;
+        parentBlock.Release();
+
         // Set parent of connection peice to this hitbox
         piece.transform.position = thisHitBox.transform.position;
         piece.transform.rotation = thisHitBox.transform.rotation;
         piece.transform.SetParent(thisHitBox.transform);
 
-
         //Remove rigid body from connecting peice
         var rb = piece.GetComponent<Rigidbody>();
         Destroy(rb);
 
-        // Remove grasp for both players
-        Block b = piece.GetComponent<Block>();
-        b.grasped = null;
-        Block parentBlock = transform.parent.GetComponent<Block>();
-        parentBlock.grasped = null;
-
-        // Remove block script from connecting peice
-        //b.rootBlock = parentBlock;
+        //Remove block script from connecting piece
+        //var blk_scr = piece.GetComponent<Block>();
+        //Destroy(blk_scr);
 
         // Play sound effect
         GameManager.PlayClickFromPoint(transform.position);

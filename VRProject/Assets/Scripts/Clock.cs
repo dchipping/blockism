@@ -17,13 +17,20 @@ public class Clock : MonoBehaviour
 
     void Update()
     {
-        if (timeRemaining > 0)
+        if (timeRemaining > 0.1)
         {
             timeRemaining -= Time.deltaTime;
             int mins = (int) Math.Floor(timeRemaining / 60f);
             int secs = ((int) Math.Floor(timeRemaining)) % 60;
 
-            clockText.text = mins.ToString() + ":" + secs.ToString();
+            if (secs < 10)
+                clockText.text = mins.ToString() + ":0" + secs.ToString();
+            else
+                clockText.text = mins.ToString() + ":" + secs.ToString();
+        }
+        else
+        {
+            clockText.text = "0:00";
         }
     }
 }
