@@ -148,6 +148,23 @@ namespace Ubiq.Avatars
                 var prefab = AvatarCatalogue.GetPrefab(prefabUuid);
                 var created = Instantiate(prefab, transform).GetComponentInChildren<Avatar>();
                 created.Id = id;
+
+                int avatar_count = 0;
+
+                foreach (var ava in Avatars)
+                {
+                    avatar_count++;
+                }
+
+                if (avatar_count % 2 == 0)
+                {
+                    created.color = "red";
+                }
+                else
+                {
+                    created.color = "yellow";
+                }
+
                 created.SetPeer(peer);
 
                 playerAvatars.Add(peer.UUID, created);
