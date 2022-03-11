@@ -58,11 +58,11 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         // the message comes from an object of the same shared ID
         if (msg.who == shared_id)
         {
-            transform.localPosition = msg.position;
+            transform.position = msg.position;
             transform.rotation = msg.rotation;
             being_grasped = msg.being_grasped;
             last_owner_id = msg.last_owner_id;
-            rb.isKinematic = msg.is_kinematic;
+            rootBlock.rb.isKinematic = msg.is_kinematic;
         }
     }
 
@@ -75,9 +75,9 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
         client.OnPeerAdded.AddListener(OnPeerAdded);
 
-        shared_id = new NetworkId((uint)(Math.Pow(10, 3) * (transform.localPosition.x +
-                                        transform.localPosition.y +
-                                        transform.localPosition.z)));
+        shared_id = new NetworkId((uint)(Math.Pow(10, 3) * (transform.position.x +
+                                        transform.position.y +
+                                        transform.position.z)));
 
         rb = GetComponent<Rigidbody>();
 
@@ -87,7 +87,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
     private void SendMessageUpdate()
     {
         Message message;
-        message.position = transform.localPosition;
+        message.position = transform.position;
         message.rotation = transform.rotation;
         message.who = shared_id;
         message.being_grasped = being_grasped;
@@ -137,6 +137,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         last_owner_id = client.Me.UUID;
 
         SendMessageUpdate();
+
     }
 
     void IGraspable.Release(Hand controller)
@@ -155,7 +156,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         // If the block is held by a player
         if (being_grasped && grasped)
@@ -166,6 +167,12 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
             // Networking code
             SendMessageUpdate();
+        }
+
+        if (rootBlock != this)
+        {
+            transform.localPosition = new Vector3(0, 0, 0);
+            transform.rotation.SetEulerAngles(0, 0, 0);
         }
     }
 }
