@@ -172,7 +172,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         if (rootBlock != this)
         {
             transform.localPosition = new Vector3(0, 0, 0);
-            transform.rotation.SetEulerAngles(0, 0, 0);
+            transform.localRotation.SetEulerAngles(0, 0, 0);
         }
     }
 }
