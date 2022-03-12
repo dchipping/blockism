@@ -50,6 +50,7 @@ public class HitBox : MonoBehaviour
         b.Release();
         b.rootBlock = parentBlock;
         parentBlock.Release();
+        b.filling = true;
 
         // Set parent of connection peice to this hitbox
         piece.transform.position = thisHitBox.transform.position;

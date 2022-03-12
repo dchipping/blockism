@@ -30,6 +30,8 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     public string color;
 
+    public bool filling;
+
     struct Message
     {
         public NetworkId who;
@@ -169,10 +171,10 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
             SendMessageUpdate();
         }
 
-        if (rootBlock != this)
+        if (filling)
         {
             transform.localPosition = new Vector3(0, 0, 0);
-            transform.localRotation.SetEulerAngles(0, 0, 0);
+            transform.localEulerAngles= new Vector3(0, 0, 0);
         }
     }
 }
