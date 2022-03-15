@@ -19,6 +19,11 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public static void StartGame()
+    {
+
+    }
+
     public static void PlayClickFromPoint(Vector3 position)
     {
         // Get random audio clip
