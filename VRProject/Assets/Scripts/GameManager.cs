@@ -17,7 +17,9 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     private Ubiq.Avatars.AvatarManager avatar_manager;
 
-    public Dictionary<string, string> avatar_roles;
+    public List<string> avatar_ids;
+
+    public List<string> avatar_roles;
 
     private string last_owner_id;
 
@@ -25,11 +27,14 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     struct Message
     {
-        public Dictionary<string, string> avatar_roles; 
+        
+        public List <string> avatar_ids;
+        public List<string> avatar_roles;
         public string last_owner_id;
 
-        public Message(Dictionary<string, string> ar, string lo_id)
+        public Message(List<string> ai, List<string> ar, string lo_id)
         {
+            this.avatar_ids = ai;
             this.avatar_roles = ar;
             this.last_owner_id = lo_id;
         }
@@ -54,6 +59,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
     private void SendMessageUpdate()
     {
         Message message;
+        message.avatar_ids = avatar_ids;
         message.avatar_roles = avatar_roles;
         message.last_owner_id = last_owner_id;
 
@@ -67,8 +73,11 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         last_owner_id = owner_avatar.Peer.UUID;
         owner_avatar.color = "red";
 
-        avatar_roles = new Dictionary<string, string>();
-        avatar_roles.Add(owner_avatar.Peer.UUID, owner_avatar.color);
+        avatar_ids = new List<string>();
+        avatar_roles = new List<string>();
+
+        avatar_ids.Add(owner_avatar.Peer.UUID);
+        avatar_roles.Add(owner_avatar.color);
 
         SendMessageUpdate();
     }
@@ -85,7 +94,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         var i = 0;
 
         foreach (var avatar in avatars) { 
-            if (!avatar_roles.ContainsKey(avatar.Peer.UUID))
+            if (!avatar_ids.Contains(avatar.Peer.UUID))
             {
                 if (i % 2 == 0)
                 {
@@ -95,7 +104,8 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
                     avatar.color = "yellow";
                 }
 
-                avatar_roles.Add(avatar.Peer.UUID, avatar.color);
+                avatar_ids.Add(avatar.Peer.UUID);
+                avatar_roles.Add(avatar.color);
             }
             i++;
         }
@@ -124,6 +134,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
             return;
         }
 
+        avatar_ids = msg.avatar_ids;
         avatar_roles = msg.avatar_roles;
         last_owner_id = msg.last_owner_id;
 
@@ -131,9 +142,9 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         foreach (var avatar in avatars)
         {
-            if (avatar_roles.ContainsKey(avatar.Peer.UUID))
+            if (avatar_ids.Contains(avatar.Peer.UUID))
             {
-                avatar.color = avatar_roles[avatar.Peer.UUID];
+                avatar.color = avatar_roles[avatar_ids.IndexOf(avatar.Peer.UUID)];
             }
         }
     }
