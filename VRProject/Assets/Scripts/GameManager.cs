@@ -46,17 +46,9 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         room_client.OnPeerAdded.AddListener(OnPeerAdded);
 
+        room_client.OnJoinedRoom.AddListener(OnJoinedRoom);
+
         avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
-
-        // set first avatar as owner
-        var owner_avatar = avatar_manager.Avatars.First();
-        last_owner_id = owner_avatar.Peer.UUID;
-        owner_avatar.color = "red";
-
-        avatar_roles = new Dictionary<string, string>();
-        avatar_roles.Add(owner_avatar.Peer.UUID, owner_avatar.color);
-
-        SendMessageUpdate();
     }
 
     private void SendMessageUpdate()
@@ -66,6 +58,19 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         message.last_owner_id = last_owner_id;
 
         context.SendJson(message);
+    }
+
+    private void OnJoinedRoom(IRoom room)
+    {
+        // set first avatar as owner
+        var owner_avatar = avatar_manager.Avatars.First();
+        last_owner_id = owner_avatar.Peer.UUID;
+        owner_avatar.color = "red";
+
+        avatar_roles = new Dictionary<string, string>();
+        avatar_roles.Add(owner_avatar.Peer.UUID, owner_avatar.color);
+
+        SendMessageUpdate();
     }
 
     private void OnPeerAdded(IPeer peer) {
