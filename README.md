@@ -17,3 +17,18 @@
 - Narrative behind the game e.g. Boss in Factory, Building a tower to escape water etc.
 - Environments Asthetics
 - Events based class changes
+
+## Final TODO:
+- Starting the game (selecting colours) - Daniel
+- Tidying the environment up - Daniel
+- Player class system working - Praveen
+- Submitting structures to the van - Costa
+- Debug blocks (e.g. Chair) - Harvey
+- Deploy to oculus - Praveen
+
+- Block spawning?
+- Restricitng one person to planning room?
+- Event based changing of roles?
+- Couple more structures?
+- Game levels?
+- Maybe adding structures together to make bigger structures?
