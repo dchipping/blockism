@@ -68,6 +68,11 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     private void OnJoinedRoom(IRoom room)
     {
+        if (avatar_manager.Avatars.Count() > 1)
+        {
+            return;
+        }
+
         // set first avatar as owner
         var owner_avatar = avatar_manager.Avatars.First();
         last_owner_id = owner_avatar.Peer.UUID;
@@ -82,7 +87,8 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         SendMessageUpdate();
     }
 
-    private void OnPeerAdded(IPeer peer) {
+    private void OnPeerAdded(IPeer peer) 
+    {
         
         // Attach roles and modify dict only if it is owner's room 
         if (room_client.Me.UUID != last_owner_id)
@@ -129,10 +135,10 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         var msg = message.FromJson<Message>();
 
         // do not update if GM same as last owner's  
-        if (room_client.Me.UUID == msg.last_owner_id)
+        /*if (room_client.Me.UUID == msg.last_owner_id)
         {
             return;
-        }
+        }*/
 
         avatar_ids = msg.avatar_ids;
         avatar_roles = msg.avatar_roles;
