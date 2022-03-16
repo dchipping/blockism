@@ -73,6 +73,10 @@ public class HitBox : MonoBehaviour
         // Update position for both blocks to ensure consistancy for all players
         b.SendMessageUpdate();
         parentBlock.SendMessageUpdate();
+
+        // Update colour string
+        parentBlock.color += "," + b.color;
+        b.color = "";
     }
 
     // Estimates percentage of two colliders that are intersecting (may need to be improved)

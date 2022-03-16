@@ -133,7 +133,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
             }
         }
 
-        if (local_avatar.color != color)
+        if (!color.Contains(local_avatar.color) || string.IsNullOrEmpty(local_avatar.color))
         {
             return;
         }
