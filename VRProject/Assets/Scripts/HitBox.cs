@@ -37,7 +37,8 @@ public class HitBox : MonoBehaviour
             if (GetIntersectionPercent(collider, thisCollider) > 0.5 && !filled)
             {
                 FillHitBox(pieces[i]);
-                filled = true;
+                if (transform.childCount > 0)
+                    filled = true;
             }
         }
     }
