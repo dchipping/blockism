@@ -60,8 +60,8 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         // the message comes from an object of the same shared ID
         if (msg.who == shared_id)
         {
-            transform.position = msg.position;
-            transform.rotation = msg.rotation;
+            rootBlock.gameObject.transform.position = msg.position;
+            rootBlock.gameObject.transform.rotation = msg.rotation;
             being_grasped = msg.being_grasped;
             last_owner_id = msg.last_owner_id;
             rootBlock.rb.isKinematic = msg.is_kinematic;
