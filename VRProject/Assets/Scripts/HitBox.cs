@@ -10,7 +10,7 @@ public class HitBox : MonoBehaviour
     public List<GameObject> pieces;
     Collider thisCollider;
     List<Collider> pieceColliders = new List<Collider>();
-    bool filled = false;
+    public bool filled = false;
 
     // Start is called before the first frame update
     void Start()
