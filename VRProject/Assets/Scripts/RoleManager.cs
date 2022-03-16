@@ -154,31 +154,9 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
             return;
         }
 
-        // if current master peer is leaving, then select a new one
-        if (peer.UUID == master_peer_id)
-        {
-            var avatars = avatar_manager.Avatars;
-
-            foreach (var avatar in avatars)
-            {
-                if (avatar.Peer.UUID != master_peer_id)
-                {
-                    master_peer_id = avatar.Peer.UUID;
-
-                    // remove leaving peer id from lists 
-                    RemoveAvatarAndRole(peer);
-
-                    SendMessageUpdate();
-
-                    return; 
-                }
-            }
-        } else
-        {
-            RemoveAvatarAndRole(peer);
-
-            SendMessageUpdate();
-        }
+        // if peer is leaving, remove them from the lists and send a message
+        RemoveAvatarAndRole(peer);
+        SendMessageUpdate();
     }
 
     void INetworkComponent.ProcessMessage(ReferenceCountedSceneGraphMessage message)
