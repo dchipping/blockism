@@ -34,7 +34,8 @@ public class HitBox : MonoBehaviour
         for (int i = 0; i < pieceColliders.Count; i++)
         {
             Collider collider = pieceColliders[i];
-            if (GetIntersectionPercent(collider, thisCollider) > 0.5 && !filled)
+            Block block = pieces[i].GetComponent<Block>();
+            if (GetIntersectionPercent(collider, thisCollider) > 0.5 && !filled && !block.filling)
             {
                 FillHitBox(pieces[i]);
                 if (transform.childCount > 0)
