@@ -5,8 +5,11 @@ using Ubiq.Messaging;
 using Ubiq.Rooms;
 using UnityEngine;
 
+
 public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 {
+    public List<string> roles = new List<string> {"red", "yellow", "green", "blue"};
+
     private NetworkContext context;
 
     private RoomClient room_client;
@@ -52,6 +55,15 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
     }
 
+    private void AddAvatarAndRole(Ubiq.Avatars.Avatar avatar)
+    {
+        if (!avatar_ids.Contains(avatar.Peer.UUID))
+        {
+            avatar_ids.Add(avatar.Peer.UUID);
+            avatar_roles.Add(avatar.color);
+        }
+    }
+
     private void SendMessageUpdate()
     {
         Message message;
@@ -72,7 +84,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         // set first avatar as owner
         var owner_avatar = avatar_manager.Avatars.First();
         master_peer_id = owner_avatar.Peer.UUID;
-        owner_avatar.color = "red";
+        owner_avatar.color = roles.First();
 
         avatar_ids = new List<string>();
         avatar_roles = new List<string>();
@@ -85,7 +97,6 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     private void OnPeerAdded(IPeer peer)
     {
-
         // Attach roles and modify dict only if it is owner's room 
         if (room_client.Me.UUID != master_peer_id)
         {
@@ -93,26 +104,29 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         }
 
         var avatars = avatar_manager.Avatars;
-        var i = 0;
+        Dictionary<string, int> role_count = new Dictionary<string, int>();
+
+        // loop through roles and initiate Dict  
+        roles.ForEach(role => role_count.Add(role, 0));
 
         foreach (var avatar in avatars)
         {
-            if (!avatar_ids.Contains(avatar.Peer.UUID))
+            // avatar already has a role 
+            if (!string.IsNullOrEmpty(avatar.color))
             {
-                if (i % 2 == 0)
-                {
-                    avatar.color = "red";
-                }
-                else
-                {
-                    avatar.color = "yellow";
-                }
+                // register the role with the Dict 
+                role_count[avatar.color] += 1;
 
-                avatar_ids.Add(avatar.Peer.UUID);
-                avatar_roles.Add(avatar.color);
+                // mainain an internal list of ids and roles 
+                AddAvatarAndRole(avatar);
             }
-            i++;
         }
+
+        var current_avatar = (Ubiq.Avatars.Avatar)avatars.Where(avatar => avatar.Peer.UUID == peer.UUID);
+        // choose role with min count as current avatar's role 
+        current_avatar.color = role_count.Aggregate((l, r) => l.Value < r.Value ? l : r).Key;
+
+        AddAvatarAndRole(current_avatar);
 
         SendMessageUpdate();
     }
@@ -131,10 +145,14 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
                     SendMessageUpdate();
 
-                    return; 
+                    break; 
                 }
             }
         }
+
+        int peer_index = avatar_ids.IndexOf(peer.UUID);
+        avatar_roles.RemoveAt(peer_index);
+        avatar_ids.RemoveAt(peer_index);
     }
 
     void INetworkComponent.ProcessMessage(ReferenceCountedSceneGraphMessage message)
