@@ -22,6 +22,8 @@ namespace Ubiq.Avatars
         /// </summary>
         public string PrefabUuid;
 
+        public string color; 
+
         /// <summary>
         /// Whether the Avatar instance represents a local or remote player. This flag is nominal only; child components do not have to use it.
         /// </summary>
