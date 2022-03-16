@@ -32,6 +32,8 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     public bool filling;
 
+    public int colourIdx;
+
     struct Message
     {
         public NetworkId who;
@@ -176,6 +178,21 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
             transform.localPosition = new Vector3(0, 0, 0);
             transform.localEulerAngles= new Vector3(0, 0, 0);
             transform.localScale = new Vector3(1, 1, 1);
+        }
+    }
+
+    public void SetColour(int colour)
+    {
+        // Set this blocks colour
+        MeshRenderer mesh_rend = GetComponent<MeshRenderer>();
+        mesh_rend.material = GameManager.blockColoursStatic[colour];
+        colourIdx = colour;
+
+        // Set any child blocks to be the same colour
+        foreach (Transform child in transform)
+        {
+            mesh_rend = child.GetComponent<MeshRenderer>();
+            mesh_rend.material = GameManager.blockColoursStatic[colour];
         }
     }
 }
