@@ -67,6 +67,10 @@ public class HitBox : MonoBehaviour
 
         // Play sound effect
         GameManager.PlayClickFromPoint(transform.position);
+
+        // Update position for both blocks to ensure consistancy for all players
+        b.SendMessageUpdate();
+        parentBlock.SendMessageUpdate();
     }
 
     // Estimates percentage of two colliders that are intersecting (may need to be improved)

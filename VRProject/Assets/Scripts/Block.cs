@@ -86,7 +86,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         rootBlock = this;
     }
 
-    private void SendMessageUpdate()
+    public void SendMessageUpdate()
     {
         Message message;
         message.position = transform.position;
@@ -175,6 +175,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         {
             transform.localPosition = new Vector3(0, 0, 0);
             transform.localEulerAngles= new Vector3(0, 0, 0);
+            transform.localScale = new Vector3(1, 1, 1);
         }
     }
 }
