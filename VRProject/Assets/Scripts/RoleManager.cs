@@ -17,7 +17,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     private List<string> avatar_roles;
 
-    private string last_owner_id;
+    private string master_peer_id;
 
     NetworkId INetworkObject.Id => new NetworkId("a15ca05dbb9ef8ec");
 
@@ -26,13 +26,13 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         public List<string> avatar_ids;
         public List<string> avatar_roles;
-        public string last_owner_id;
+        public string master_peer_id;
 
         public Message(List<string> ai, List<string> ar, string lo_id)
         {
             this.avatar_ids = ai;
             this.avatar_roles = ar;
-            this.last_owner_id = lo_id;
+            this.master_peer_id = lo_id;
         }
     }
 
@@ -47,6 +47,8 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         room_client.OnJoinedRoom.AddListener(OnJoinedRoom);
 
+        room_client.OnPeerRemoved.AddListener(OnPeerRemoved);
+
         avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
     }
 
@@ -55,7 +57,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         Message message;
         message.avatar_ids = avatar_ids;
         message.avatar_roles = avatar_roles;
-        message.last_owner_id = last_owner_id;
+        message.master_peer_id = master_peer_id;
 
         context.SendJson(message);
     }
@@ -69,7 +71,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         // set first avatar as owner
         var owner_avatar = avatar_manager.Avatars.First();
-        last_owner_id = owner_avatar.Peer.UUID;
+        master_peer_id = owner_avatar.Peer.UUID;
         owner_avatar.color = "red";
 
         avatar_ids = new List<string>();
@@ -85,7 +87,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
     {
 
         // Attach roles and modify dict only if it is owner's room 
-        if (room_client.Me.UUID != last_owner_id)
+        if (room_client.Me.UUID != master_peer_id)
         {
             return;
         }
@@ -115,20 +117,39 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         SendMessageUpdate();
     }
 
+    private void OnPeerRemoved(IPeer peer)
+    {
+        if (peer.UUID == master_peer_id)
+        {
+            var avatars = avatar_manager.Avatars;
+
+            foreach (var avatar in avatars)
+            {
+                if (avatar.Peer.UUID != master_peer_id)
+                {
+                    master_peer_id = avatar.Peer.UUID;
+
+                    SendMessageUpdate();
+
+                    return; 
+                }
+            }
+        }
+    }
 
     void INetworkComponent.ProcessMessage(ReferenceCountedSceneGraphMessage message)
     {
         var msg = message.FromJson<Message>();
 
         // do not update if GM same as last owner's  
-        /*if (room_client.Me.UUID == msg.last_owner_id)
+        /*if (room_client.Me.UUID == msg.master_peer_id)
         {
             return;
         }*/
 
         avatar_ids = msg.avatar_ids;
         avatar_roles = msg.avatar_roles;
-        last_owner_id = msg.last_owner_id;
+        master_peer_id = msg.master_peer_id;
 
         var avatars = avatar_manager.Avatars;
 
