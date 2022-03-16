@@ -191,6 +191,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         MeshRenderer mesh_rend = GetComponent<MeshRenderer>();
         mesh_rend.material = GameManager.blockColoursStatic[colour];
         colourIdx = colour;
+        color = GameManager.blockColoursStatic[colour].name.ToLower();
 
         // Set any child blocks to be the same colour
         foreach (Transform child in transform)

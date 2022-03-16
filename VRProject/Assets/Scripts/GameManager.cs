@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
     private static List<Block> allBlocksStatic;
 
     // Game state
-    static int numOfPlayers = 4;
+    static int numOfPlayers = 2;
 
     
     // Networking/avatar components
