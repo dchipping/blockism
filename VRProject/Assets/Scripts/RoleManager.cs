@@ -64,6 +64,13 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         }
     }
 
+    private void RemoveAvatarAndRole(IPeer peer)
+    {
+        int peer_index = avatar_ids.IndexOf(peer.UUID);
+        avatar_roles.RemoveAt(peer_index);
+        avatar_ids.RemoveAt(peer_index);
+    }
+
     private void SendMessageUpdate()
     {
         Message message;
@@ -97,7 +104,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     private void OnPeerAdded(IPeer peer)
     {
-        // Attach roles and modify dict only if it is owner's room 
+        // Attach roles and modify dict only if it is master peer's room 
         if (room_client.Me.UUID != master_peer_id)
         {
             return;
@@ -121,8 +128,16 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
                 AddAvatarAndRole(avatar);
             }
         }
+        
+       Ubiq.Avatars.Avatar current_avatar = null;
+       foreach (var avatar in avatars)
+       {
+            if (avatar.Peer.UUID == peer.UUID)
+            {
+                current_avatar = avatar; 
+            }
+       }
 
-        var current_avatar = (Ubiq.Avatars.Avatar)avatars.Where(avatar => avatar.Peer.UUID == peer.UUID);
         // choose role with min count as current avatar's role 
         current_avatar.color = role_count.Aggregate((l, r) => l.Value < r.Value ? l : r).Key;
 
@@ -133,6 +148,13 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     private void OnPeerRemoved(IPeer peer)
     {
+        // Remove peer and broadcast message only if master peer 
+        if (room_client.Me.UUID != master_peer_id)
+        {
+            return;
+        }
+
+        // if current master peer is leaving, then select a new one
         if (peer.UUID == master_peer_id)
         {
             var avatars = avatar_manager.Avatars;
@@ -143,16 +165,20 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
                 {
                     master_peer_id = avatar.Peer.UUID;
 
+                    // remove leaving peer id from lists 
+                    RemoveAvatarAndRole(peer);
+
                     SendMessageUpdate();
 
-                    break; 
+                    return; 
                 }
             }
-        }
+        } else
+        {
+            RemoveAvatarAndRole(peer);
 
-        int peer_index = avatar_ids.IndexOf(peer.UUID);
-        avatar_roles.RemoveAt(peer_index);
-        avatar_ids.RemoveAt(peer_index);
+            SendMessageUpdate();
+        }
     }
 
     void INetworkComponent.ProcessMessage(ReferenceCountedSceneGraphMessage message)
