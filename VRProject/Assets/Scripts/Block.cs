@@ -34,6 +34,10 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     public int colourIdx;
 
+    private Ubiq.Avatars.AvatarManager avatar_manager;
+
+    private Ubiq.Avatars.Avatar local_avatar = null; 
+
     struct Message
     {
         public NetworkId who;
@@ -86,6 +90,8 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         rb = GetComponent<Rigidbody>();
 
         rootBlock = this;
+
+        avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
     }
 
     public void SendMessageUpdate()
@@ -117,9 +123,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
             return;
         }
 
-        var avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
         var avatars = avatar_manager.Avatars;
-        Ubiq.Avatars.Avatar local_avatar = null;
 
         foreach (var avatar in avatars)
         {
@@ -129,7 +133,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
             }
         }
 
-        if (local_avatar.GetComponentInChildren<BuilderAvatar>().color != color)
+        if (local_avatar.color != color)
         {
             return;
         }

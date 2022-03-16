@@ -148,6 +148,7 @@ namespace Ubiq.Avatars
                 var prefab = AvatarCatalogue.GetPrefab(prefabUuid);
                 var created = Instantiate(prefab, transform).GetComponentInChildren<Avatar>();
                 created.Id = id;
+
                 created.SetPeer(peer);
 
                 playerAvatars.Add(peer.UUID, created);
