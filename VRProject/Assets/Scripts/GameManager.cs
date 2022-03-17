@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public static void StartGame()
+    public void StartGame()
     {
         // Colour all blocks in scene
         for (int i = 0; i < allBlocksStatic.Count; i++)
@@ -62,26 +62,26 @@ public class GameManager : MonoBehaviour
         }
         currLevel = 0;
 
-        conveyerQueue.Enqueue(allBlocksStatic[0]);
-        conveyerQueue.Enqueue(allBlocksStatic[1]);
-        conveyerQueue.Enqueue(allBlocksStatic[2]);
         NextLevel();
-        SpawnBlocks();
+        StartCoroutine(SpawnBlocks());
     }
 
-    static void SpawnBlocks()
+    // Unity allows to use Start as IEnumerator instead of a void
+    private IEnumerator SpawnBlocks()
     {
-        float lastClockValue = Clock.timeRemaining;
-        while (conveyerQueue.Count > 0)
+        while (true)
         {
-            while (lastClockValue - Clock.timeRemaining > 1)
+            if (conveyerQueue.Count > 0)
             {
-                lastClockValue = Clock.timeRemaining;
                 Block nextBlock = conveyerQueue.Dequeue();
                 nextBlock.gameObject.transform.position = new Vector3(-7, 1.35f, 8.75f);
             }
+            yield return new WaitForSeconds(2);
         }
+        
     }
+
+
 
     public static void PlayClickFromPoint(Vector3 position)
     {
@@ -101,5 +101,47 @@ public class GameManager : MonoBehaviour
         {
             bp.UpdateVisibility();
         }
+
+        if (currLevel == 1)
+            Level1();
+        else if (currLevel == 2)
+            Level2();
+        else if (currLevel == 3)
+            Level3();
+    }
+
+    private static void Level1()
+    {
+        for (int i = 0; i < 3; i++)
+            conveyerQueue.Enqueue(allBlocksStatic[i]);
+    }
+
+    private static void Level2()
+    {
+
+        conveyerQueue.Clear();
+
+        for (int i = 0; i < 3; i++)
+        {
+            Block nextBlock = allBlocksStatic[i].GetComponent<Block>();
+            nextBlock.gameObject.transform.position = new Vector3(0, -99.5f, 8.75f);
+        }
+
+        for (int i = 3; i < 15; i++)
+            conveyerQueue.Enqueue(allBlocksStatic[i]);
+    }
+
+    private static void Level3()
+    {
+        conveyerQueue.Clear();
+
+        for (int i = 3; i < 15; i++)
+        {
+            Block nextBlock = allBlocksStatic[i].GetComponent<Block>();
+            nextBlock.gameObject.transform.position = new Vector3(0, -99.5f, 8.75f);
+        }
+
+        for (int i = 15; i < 30; i++)
+            conveyerQueue.Enqueue(allBlocksStatic[i]);
     }
 }
