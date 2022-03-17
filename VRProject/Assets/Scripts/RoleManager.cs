@@ -50,7 +50,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         room_client.OnJoinedRoom.AddListener(OnJoinedRoom);
 
-        room_client.OnPeerRemoved.AddListener(OnPeerRemoved);
+        room_client.OnRoomUpdated.AddListener(OnRoomUpdated);
 
         avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
     }
@@ -146,7 +146,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         SendMessageUpdate();
     }
 
-    private void OnPeerRemoved(IPeer peer)
+    private void OnRoomUpdated(IRoom room)
     {
         // Remove peer and broadcast message only if master peer 
         if (room_client.Me.UUID != master_peer_id)
@@ -154,8 +154,21 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
             return;
         }
 
-        // if peer is leaving, remove them from the lists and send a message
-        RemoveAvatarAndRole(peer);
+        // master peer is leaving room, so select a new owner
+        var avatars = avatar_manager.Avatars;
+
+        foreach(var avatar in avatars)
+        {
+            if (avatar.Peer.UUID != room_client.Me.UUID)
+            {
+                master_peer_id = avatar.Peer.UUID;
+                break; 
+            }
+        }
+
+        // master peer is leaving, remove them from the lists
+        // and send a message
+        RemoveAvatarAndRole(room_client.Me);
         SendMessageUpdate();
     }
 
