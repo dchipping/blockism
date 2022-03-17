@@ -50,7 +50,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         room_client.OnJoinedRoom.AddListener(OnJoinedRoom);
 
-        room_client.OnRoomUpdated.AddListener(OnRoomUpdated);
+        /*room_client.OnRoomUpdated.AddListener(OnRoomUpdated);*/
 
         avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
     }
@@ -146,8 +146,11 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         SendMessageUpdate();
     }
 
-    private void OnRoomUpdated(IRoom room)
+    /*private void OnRoomUpdated(IRoom room)
     {
+        if (string.IsNullOrEmpty(master_peer_id))
+            return; 
+
         // Remove peer and broadcast message only if master peer 
         if (room_client.Me.UUID != master_peer_id)
         {
@@ -162,15 +165,16 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
             if (avatar.Peer.UUID != room_client.Me.UUID)
             {
                 master_peer_id = avatar.Peer.UUID;
-                break; 
+                RemoveAvatarAndRole(room_client.Me);
+                // master peer is leaving, remove them from the lists
+                // and send a message
+                SendMessageUpdate();
+
+                return; 
             }
         }
 
-        // master peer is leaving, remove them from the lists
-        // and send a message
-        RemoveAvatarAndRole(room_client.Me);
-        SendMessageUpdate();
-    }
+    }*/
 
     void INetworkComponent.ProcessMessage(ReferenceCountedSceneGraphMessage message)
     {
