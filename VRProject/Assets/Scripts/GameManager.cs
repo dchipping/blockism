@@ -16,8 +16,16 @@ public class GameManager : MonoBehaviour
     public List<Block> allBlocks;
     private static List<Block> allBlocksStatic;
 
+    // A list of blueprints
+    public List<BluePrint> bluePrints;
+    private static List<BluePrint> bluePrintsStatic;
+
     // Game state
     static int numOfPlayers = 2;
+    static Queue<Block> conveyerQueue = new Queue<Block>();
+
+    // Current level
+    public static int currLevel;
 
     // Start is called before the first frame update
     void Start()
@@ -26,8 +34,13 @@ public class GameManager : MonoBehaviour
         clickSoundsStatic = clickSound;
         blockColoursStatic = blockColours;
         allBlocksStatic = allBlocks;
+        bluePrintsStatic = bluePrints;
 
         StartGame();
+        conveyerQueue.Enqueue(allBlocksStatic[0]);
+        conveyerQueue.Enqueue(allBlocksStatic[1]);
+        conveyerQueue.Enqueue(allBlocksStatic[2]);
+        StartCoroutine(SpawnBlocks());
     }
 
     // Update is called once per frame
@@ -50,6 +63,18 @@ public class GameManager : MonoBehaviour
             int colourIdx = i % numberOfColours;
             allBlocksStatic[i].SetColour(colourIdx);
         }
+        currLevel = 0;
+        NextLevel();
+    }
+
+    static IEnumerator SpawnBlocks()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1);
+            Block nextBlock = conveyerQueue.Dequeue();
+            nextBlock.gameObject.transform.position = new Vector3(-7, 1.35f, 8.75f);
+        }
     }
 
     public static void PlayClickFromPoint(Vector3 position)
@@ -60,5 +85,15 @@ public class GameManager : MonoBehaviour
 
         // Play clicking sound
         AudioSource.PlayClipAtPoint(clickSoundsStatic[index], position);
+    }
+
+    public static void NextLevel()
+    {
+        currLevel++;
+        Clock.ResetClock();
+        foreach (BluePrint bp in bluePrintsStatic)
+        {
+            bp.UpdateVisibility();
+        }
     }
 }
