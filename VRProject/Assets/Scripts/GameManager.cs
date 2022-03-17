@@ -37,10 +37,7 @@ public class GameManager : MonoBehaviour
         bluePrintsStatic = bluePrints;
 
         StartGame();
-        conveyerQueue.Enqueue(allBlocksStatic[0]);
-        conveyerQueue.Enqueue(allBlocksStatic[1]);
-        conveyerQueue.Enqueue(allBlocksStatic[2]);
-        StartCoroutine(SpawnBlocks());
+        
     }
 
     // Update is called once per frame
@@ -64,16 +61,25 @@ public class GameManager : MonoBehaviour
             allBlocksStatic[i].SetColour(colourIdx);
         }
         currLevel = 0;
+
+        conveyerQueue.Enqueue(allBlocksStatic[0]);
+        conveyerQueue.Enqueue(allBlocksStatic[1]);
+        conveyerQueue.Enqueue(allBlocksStatic[2]);
         NextLevel();
+        SpawnBlocks();
     }
 
-    static IEnumerator SpawnBlocks()
+    static void SpawnBlocks()
     {
-        while (true)
+        float lastClockValue = Clock.timeRemaining;
+        while (conveyerQueue.Count > 0)
         {
-            yield return new WaitForSeconds(1);
-            Block nextBlock = conveyerQueue.Dequeue();
-            nextBlock.gameObject.transform.position = new Vector3(-7, 1.35f, 8.75f);
+            while (lastClockValue - Clock.timeRemaining > 1)
+            {
+                lastClockValue = Clock.timeRemaining;
+                Block nextBlock = conveyerQueue.Dequeue();
+                nextBlock.gameObject.transform.position = new Vector3(-7, 1.35f, 8.75f);
+            }
         }
     }
 
