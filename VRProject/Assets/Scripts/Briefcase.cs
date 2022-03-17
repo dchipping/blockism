@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Ubiq.XR;
 using UnityEngine;
 
-public class Briefcase : MonoBehaviour, IUseable
+public class Briefcase : MonoBehaviour, IUseable, IGraspable
 {
     public Light pointLight;
 
@@ -24,6 +24,21 @@ public class Briefcase : MonoBehaviour, IUseable
     public void UnUse(Hand controller)
     {
         
+    }
+
+    public void Grasp(Hand controller)
+    {
+        if (!isStarted)
+        {
+            GameManager.StartGame();
+            isStarted = true;
+            pointLight.intensity = 0f;
+        }
+    }
+
+    public void Release(Hand controller) 
+    {
+
     }
 
     public void FixedUpdate()
