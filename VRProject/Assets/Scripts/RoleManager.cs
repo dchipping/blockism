@@ -50,7 +50,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         room_client.OnJoinedRoom.AddListener(OnJoinedRoom);
 
-        /*room_client.OnRoomUpdated.AddListener(OnRoomUpdated);*/
+        room_client.OnRoomUpdated.AddListener(OnRoomUpdated);
 
         avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
     }
@@ -146,35 +146,40 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         SendMessageUpdate();
     }
 
-    /*private void OnRoomUpdated(IRoom room)
+    private void OnRoomUpdated(IRoom room)
     {
-        if (string.IsNullOrEmpty(master_peer_id))
-            return; 
-
         // Remove peer and broadcast message only if master peer 
         if (room_client.Me.UUID != master_peer_id)
         {
             return;
         }
 
-        // master peer is leaving room, so select a new owner
-        var avatars = avatar_manager.Avatars;
-
-        foreach(var avatar in avatars)
+        // master peer is leaving room if room name, uuid and join code are null 
+        if (string.IsNullOrEmpty(room.JoinCode) 
+                && string.IsNullOrEmpty(room.Name) 
+                && string.IsNullOrEmpty(room.UUID))
         {
-            if (avatar.Peer.UUID != room_client.Me.UUID)
-            {
-                master_peer_id = avatar.Peer.UUID;
-                RemoveAvatarAndRole(room_client.Me);
-                // master peer is leaving, remove them from the lists
-                // and send a message
-                SendMessageUpdate();
+            // master peer is leaving room, so select a new owner
+            var avatars = avatar_manager.Avatars;
 
-                return; 
+            foreach (var avatar in avatars)
+            {
+                if (avatar.Peer.UUID != master_peer_id)
+                {
+                    master_peer_id = avatar.Peer.UUID;
+
+                    // master peer is leaving, remove them from the lists
+                    // and send a message
+                    RemoveAvatarAndRole(room_client.Me);
+                    
+                    SendMessageUpdate();
+
+                    return;
+                }
             }
         }
 
-    }*/
+    }
 
     void INetworkComponent.ProcessMessage(ReferenceCountedSceneGraphMessage message)
     {
