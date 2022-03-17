@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    // Helper Signs
+    public List<GameObject> helperSigns;
+    private static List<GameObject> helperSignsStatic;
+
     // Sound effects
     public List<AudioClip> clickSound;
     private static List<AudioClip> clickSoundsStatic;
@@ -31,12 +35,13 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         // Initalize static variables
+        helperSignsStatic = helperSigns;
         clickSoundsStatic = clickSound;
         blockColoursStatic = blockColours;
         allBlocksStatic = allBlocks;
         bluePrintsStatic = bluePrints;
 
-        StartGame();
+        //StartGame();
         conveyerQueue.Enqueue(allBlocksStatic[0]);
         conveyerQueue.Enqueue(allBlocksStatic[1]);
         conveyerQueue.Enqueue(allBlocksStatic[2]);
@@ -51,6 +56,12 @@ public class GameManager : MonoBehaviour
 
     public static void StartGame()
     {
+        Debug.Log("Starting Game!");
+        foreach (GameObject sign in helperSignsStatic) // Loop through List with foreach
+        {
+            Destroy(sign);
+        }
+
         // Colour all blocks in scene
         for (int i = 0; i < allBlocksStatic.Count; i++)
         {
