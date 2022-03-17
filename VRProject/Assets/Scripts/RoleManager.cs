@@ -16,11 +16,12 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     private Ubiq.Avatars.AvatarManager avatar_manager;
 
+    // set of variables for messages
     private List<string> avatar_ids;
-
     private List<string> avatar_roles;
-
     private string master_peer_id;
+    private string room_id;
+    // set of variables for messages
 
     NetworkId INetworkObject.Id => new NetworkId("a15ca05dbb9ef8ec");
 
@@ -30,12 +31,14 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         public List<string> avatar_ids;
         public List<string> avatar_roles;
         public string master_peer_id;
+        public string room_id;
 
-        public Message(List<string> ai, List<string> ar, string lo_id)
+        public Message(List<string> ai, List<string> ar, string mpi, string rid)
         {
             this.avatar_ids = ai;
             this.avatar_roles = ar;
-            this.master_peer_id = lo_id;
+            this.master_peer_id = mpi;
+            this.room_id = rid;
         }
     }
 
@@ -50,7 +53,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         room_client.OnJoinedRoom.AddListener(OnJoinedRoom);
 
-        /*room_client.OnRoomUpdated.AddListener(OnRoomUpdated);*/
+        room_client.OnRoomUpdated.AddListener(OnRoomUpdated);
 
         avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
     }
@@ -77,24 +80,35 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         message.avatar_ids = avatar_ids;
         message.avatar_roles = avatar_roles;
         message.master_peer_id = master_peer_id;
+        message.room_id = room_id;
 
         context.SendJson(message);
     }
 
     private void OnJoinedRoom(IRoom room)
     {
+        // room with more than 1 avatar already has master peer
         if (avatar_manager.Avatars.Count() > 1)
         {
             return;
         }
 
-        // set first avatar as owner
+        // do not set master peer for empty room 
+        if (string.IsNullOrEmpty(room.JoinCode)
+                && string.IsNullOrEmpty(room.Name)
+                && string.IsNullOrEmpty(room.UUID))
+        {
+            return;
+        }
+
+        // set first avatar as master peer
         var owner_avatar = avatar_manager.Avatars.First();
         master_peer_id = owner_avatar.Peer.UUID;
-        owner_avatar.color = roles.First();
+        owner_avatar.color = roles[Random.Range(0, roles.Count())];
 
         avatar_ids = new List<string>();
         avatar_roles = new List<string>();
+        room_id = room.UUID;
 
         avatar_ids.Add(owner_avatar.Peer.UUID);
         avatar_roles.Add(owner_avatar.color);
@@ -146,45 +160,50 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         SendMessageUpdate();
     }
 
-    /*private void OnRoomUpdated(IRoom room)
+    private void OnRoomUpdated(IRoom room)
     {
-        if (string.IsNullOrEmpty(master_peer_id))
-            return; 
-
-        // Remove peer and broadcast message only if master peer 
-        if (room_client.Me.UUID != master_peer_id)
+        // peer is leaving room if room name, uuid and join code are null 
+        if (string.IsNullOrEmpty(room.JoinCode) 
+                && string.IsNullOrEmpty(room.Name) 
+                && string.IsNullOrEmpty(room.UUID))
         {
-            return;
-        }
-
-        // master peer is leaving room, so select a new owner
-        var avatars = avatar_manager.Avatars;
-
-        foreach(var avatar in avatars)
-        {
-            if (avatar.Peer.UUID != room_client.Me.UUID)
+            // if peer used to be master, do something
+            if (master_peer_id == room_client.Me.UUID)
             {
-                master_peer_id = avatar.Peer.UUID;
-                RemoveAvatarAndRole(room_client.Me);
-                // master peer is leaving, remove them from the lists
-                // and send a message
-                SendMessageUpdate();
+                // remove ourselves from lists
+                var peer_index = avatar_ids.IndexOf(room_client.Me.UUID);
+                avatar_ids.RemoveAt(peer_index);
+                avatar_roles.RemoveAt(peer_index);
 
-                return; 
+                // choose someone else as master
+                if (avatar_ids.Count() > 0)
+                {
+                    master_peer_id = avatar_ids[0];
+
+                    // send message update
+                    SendMessageUpdate();
+                }
+
             }
+
+            // reset variables since we are entering empty room
+            avatar_ids = new List<string>();
+            avatar_roles = new List<string>();
+            room_id = room.UUID;
+            master_peer_id = "";
         }
 
-    }*/
+    }
 
     void INetworkComponent.ProcessMessage(ReferenceCountedSceneGraphMessage message)
     {
         var msg = message.FromJson<Message>();
 
-        // do not update if GM same as last owner's  
-        /*if (room_client.Me.UUID == msg.master_peer_id)
+        // utilize message update only if sent my master peer in the same room 
+        if (msg.room_id != room_client.Room.UUID)
         {
-            return;
-        }*/
+            return; 
+        }
 
         avatar_ids = msg.avatar_ids;
         avatar_roles = msg.avatar_roles;

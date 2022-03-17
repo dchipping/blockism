@@ -7,6 +7,6 @@ public class Despwaner : MonoBehaviour
     // When something collides with belt
     private void OnCollisionEnter(Collision collision)
     {
-        Destroy(collision.gameObject);
+        collision.gameObject.transform.position = new Vector3(-7, 1.35f, 8.75f);
     }
 }
