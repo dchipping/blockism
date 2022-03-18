@@ -8,7 +8,15 @@ using UnityEngine;
 
 public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 {
-    public List<string> roles = new List<string> {"red", "yellow", "green", "blue"};
+    private List<string> roles = new List<string> {"red", "yellow", "green", "blue"};
+
+    private enum Roles
+    {
+        red, 
+        yellow, 
+        green, 
+        blue
+    };
 
     private NetworkContext context;
 
@@ -101,10 +109,16 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
             return;
         }
 
-        // set first avatar as master peer
+        // set first avatar as master peer      
         var owner_avatar = avatar_manager.Avatars.First();
         master_peer_id = owner_avatar.Peer.UUID;
         owner_avatar.color = roles[Random.Range(0, roles.Count())];
+
+        var result = avatar_manager.AvatarCatalogue.prefabs[roles.IndexOf(owner_avatar.color)];
+
+        /*avatar_manager.CreateLocalAvatar(result);*/
+
+        room_client.Me["ubiq.avatar.prefab"] = result.name;
 
         avatar_ids = new List<string>();
         avatar_roles = new List<string>();
@@ -154,6 +168,8 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         // choose role with min count as current avatar's role 
         current_avatar.color = role_count.Aggregate((l, r) => l.Value < r.Value ? l : r).Key;
+
+        // peer["ubiq.avatar.prefab"] = GameObject.FindGameObjectWithTag(current_avatar.color).name;
 
         AddAvatarAndRole(current_avatar);
 
@@ -213,9 +229,13 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         foreach (var avatar in avatars)
         {
-            if (avatar_ids.Contains(avatar.Peer.UUID))
+            avatar.color = avatar_roles[avatar_ids.IndexOf(avatar.Peer.UUID)];
+        
+            if (avatar.Peer.UUID == room_client.Me.UUID)
             {
-                avatar.color = avatar_roles[avatar_ids.IndexOf(avatar.Peer.UUID)];
+                var prefab = avatar_manager.AvatarCatalogue.prefabs[roles.IndexOf(avatar.color)];
+
+                room_client.Me["ubiq.avatar.prefab"] = prefab.name;
             }
         }
     }
