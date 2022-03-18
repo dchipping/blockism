@@ -233,7 +233,9 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         
             if (avatar.Peer.UUID == room_client.Me.UUID)
             {
-                room_client.Me["ubiq.avatar.prefab"] = GameObject.FindGameObjectWithTag(avatar.color).name;
+                var prefab = avatar_manager.AvatarCatalogue.prefabs[roles.IndexOf(avatar.color)];
+
+                room_client.Me["ubiq.avatar.prefab"] = prefab.name;
             }
         }
     }
