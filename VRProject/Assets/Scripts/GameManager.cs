@@ -10,19 +10,28 @@ public class GameManager : MonoBehaviour
 
     // Materials
     public List<Material> blockColours;
+    public List<Material> bluePrintColours;
     public static List<Material> blockColoursStatic;
 
     // A list of all blocks in the game world
     public List<Block> allBlocks;
     private static List<Block> allBlocksStatic;
 
+    // A list of all blue print blocks in the game world
+    public List<MeshRenderer> bluePrintBlocks;
+    private static List<MeshRenderer> bluePrintBlocksStatic;
+
     // A list of blueprints
     public List<BluePrint> bluePrints;
     private static List<BluePrint> bluePrintsStatic;
 
+    // A list of blueprints
+    public List<HitBox> hitboxes;
+    private static List<HitBox> hitboxesStatic;
+
     // Game state
-    static int numOfPlayers = 2;
-    static Queue<Block> conveyerQueue = new Queue<Block>();
+    static int numOfPlayers = 4;
+    public static Queue<Block> conveyerQueue = new Queue<Block>();
 
     // Current level
     public static int currLevel;
@@ -35,6 +44,8 @@ public class GameManager : MonoBehaviour
         blockColoursStatic = blockColours;
         allBlocksStatic = allBlocks;
         bluePrintsStatic = bluePrints;
+        bluePrintBlocksStatic = bluePrintBlocks;
+        hitboxesStatic = hitboxes;
 
         StartGame();
         
@@ -59,6 +70,22 @@ public class GameManager : MonoBehaviour
             // Tell blocks what materials they should use
             int colourIdx = i % numberOfColours;
             allBlocksStatic[i].SetColour(colourIdx);
+
+            
+            // Tell blue print blocks what materials they should use
+            bluePrintBlocks[i].material = bluePrintColours[colourIdx];
+
+            // Set any child blocks to be the same colour
+            foreach (Transform child in bluePrintBlocks[i].gameObject.transform)
+            {
+                MeshRenderer mesh_rend = child.GetComponent<MeshRenderer>();
+                mesh_rend.material = bluePrintColours[colourIdx];
+            }
+
+            // Set hitbox correct colours
+            if (hitboxes[i] != null)
+                hitboxes[i].correctColourIdx = colourIdx;
+
         }
         currLevel = 0;
 

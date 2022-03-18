@@ -7,6 +7,7 @@ public class Despwaner : MonoBehaviour
     // When something collides with belt
     private void OnCollisionEnter(Collision collision)
     {
-        collision.gameObject.transform.position = new Vector3(-7, 1.35f, 8.75f);
+        if (!GameManager.conveyerQueue.Contains(collision.gameObject.GetComponent<Block>()))
+            GameManager.conveyerQueue.Enqueue(collision.gameObject.GetComponent<Block>());
     }
 }
