@@ -240,11 +240,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0975a5514e3a90149856530392ae1169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roles:
-  - red
-  - yellow
-  - green
-  - blue
 --- !u!4 &225490469 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7290265295817051041, guid: f2d44976f09b5df40b4d00077fec932a,
@@ -434,11 +429,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0975a5514e3a90149856530392ae1169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roles:
-  - red
-  - yellow
-  - green
-  - blue
 --- !u!1001 &652801913
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1087,6 +1077,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6824257153444348250, guid: 2fb578800afc87244b5ba3a0fbbd11c0,
+        type: 3}
+      propertyPath: LocalPrefabUuid
+      value: Floating Avatar
       objectReference: {fileID: 0}
     - target: {fileID: 7068762446266015360, guid: 2fb578800afc87244b5ba3a0fbbd11c0,
         type: 3}
@@ -2130,6 +2125,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6824257153444348250, guid: 2fb578800afc87244b5ba3a0fbbd11c0,
+        type: 3}
+      propertyPath: LocalPrefabUuid
+      value: Floating Avatar
       objectReference: {fileID: 0}
     - target: {fileID: 7068762446266015360, guid: 2fb578800afc87244b5ba3a0fbbd11c0,
         type: 3}

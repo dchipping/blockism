@@ -169,7 +169,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         // choose role with min count as current avatar's role 
         current_avatar.color = role_count.Aggregate((l, r) => l.Value < r.Value ? l : r).Key;
 
-        peer["ubiq.avatar.prefab"] = GameObject.FindGameObjectWithTag(current_avatar.color).name;
+        // peer["ubiq.avatar.prefab"] = GameObject.FindGameObjectWithTag(current_avatar.color).name;
 
         AddAvatarAndRole(current_avatar);
 
