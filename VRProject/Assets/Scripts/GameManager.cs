@@ -34,7 +34,8 @@ public class GameManager : MonoBehaviour
     private static List<HitBox> hitboxesStatic;
 
     // Game state
-    static int numOfPlayers = 4;
+    static int numOfPlayers = 1;
+    public static int score = 0;
     public static Queue<Block> conveyerQueue = new Queue<Block>();
 
     // Current level
@@ -147,6 +148,8 @@ public class GameManager : MonoBehaviour
 
     private static void Level1()
     {
+        conveyerQueue.Clear();
+
         for (int i = 0; i < 3; i++)
             conveyerQueue.Enqueue(allBlocksStatic[i]);
     }

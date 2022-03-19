@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Clock : MonoBehaviour
 {
-    public static float timeRemaining = 60;
+    public static float timeRemaining = 0;
     private TMPro.TextMeshProUGUI clockText;
 
     // Start is called before the first frame update
@@ -37,6 +37,6 @@ public class Clock : MonoBehaviour
 
     public static void ResetClock()
     {
-        timeRemaining = 60;
+        timeRemaining = 180;
     }
 }
