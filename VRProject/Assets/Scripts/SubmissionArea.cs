@@ -56,7 +56,7 @@ public class SubmissionArea : MonoBehaviour
                 scoreText.text = "$" + GameManager.score.ToString();
 
                 // Teleport object somewhere else
-                other.gameObject.transform.position = new Vector3(0, -99.5f, 28.75f);
+                other.gameObject.transform.position = new Vector3(0, -9.5f, 28.75f);
 
                 // Go to next level if enough structures have been submitted
                 submittedStructures++;
