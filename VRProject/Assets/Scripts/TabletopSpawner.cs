@@ -12,14 +12,14 @@ namespace Ubiq.Samples
 
         void Start()
         {
-            InvokeRepeating("SpawnTabletop", 5f, 5f);
+            //InvokeRepeating("SpawnTabletop", 5f, 5f);
         }
 
 
         public void SpawnTabletop()
         {
-            int idx = rnd.Next(0, catalogue.prefabs.Count);
-            NetworkSpawner.Spawn(this, catalogue.prefabs[idx]);
+            //int idx = rnd.Next(0, catalogue.prefabs.Count);
+            //NetworkSpawner.Spawn(this, catalogue.prefabs[idx]);
         }
     }
 }

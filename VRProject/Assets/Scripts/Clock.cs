@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Clock : MonoBehaviour
 {
-    public float timeRemaining = 120;
+    public static float timeRemaining = 0;
     private TMPro.TextMeshProUGUI clockText;
 
     // Start is called before the first frame update
@@ -20,17 +20,29 @@ public class Clock : MonoBehaviour
         if (timeRemaining > 0.1)
         {
             timeRemaining -= Time.deltaTime;
-            int mins = (int) Math.Floor(timeRemaining / 60f);
-            int secs = ((int) Math.Floor(timeRemaining)) % 60;
+            int mins = (int)Math.Floor(timeRemaining / 60f);
+            int secs = ((int)Math.Floor(timeRemaining)) % 60;
 
             if (secs < 10)
                 clockText.text = mins.ToString() + ":0" + secs.ToString();
             else
                 clockText.text = mins.ToString() + ":" + secs.ToString();
         }
-        else
+        else 
         {
             clockText.text = "0:00";
+            if (GameManager.currLevel > 0 && GameManager.currLevel < 4)
+                GameManager.NextLevel();
         }
+    }
+
+    public static void ResetClock()
+    {
+        timeRemaining = 180;
+    }
+
+    public static void EndGame()
+    {
+        timeRemaining = -1;
     }
 }

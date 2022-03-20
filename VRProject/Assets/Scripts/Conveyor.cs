@@ -17,9 +17,14 @@ public class Conveyor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        List<string> alreadyUpdated = new List<string>();
         for (int i = 0; i < onBelt.Count; i++)
         {
-            onBelt[i].GetComponent<Rigidbody>().velocity = speed * direction * Time.deltaTime;
+            if (!alreadyUpdated.Contains(onBelt[i].name))
+            {
+                onBelt[i].transform.position += (speed * direction * Time.deltaTime);
+                alreadyUpdated.Add(onBelt[i].name);
+            }
         }
     }
 

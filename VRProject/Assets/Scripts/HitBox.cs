@@ -11,6 +11,7 @@ public class HitBox : MonoBehaviour
     Collider thisCollider;
     List<Collider> pieceColliders = new List<Collider>();
     public bool filled = false;
+    public int correctColourIdx;
 
     // Start is called before the first frame update
     void Start()

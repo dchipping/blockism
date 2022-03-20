@@ -80,7 +80,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
 
-        JoinRoom();
+       /* JoinRoom();*/
     }
 
     private void JoinRoom()
@@ -338,5 +338,13 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
                 room_client.Me["ubiq.avatar.prefab"] = prefab.name;
             }
         }
+    }
+
+    public List<int> GetAvatarColourIndexes()
+    {
+        List<int> avatar_roles_indexs = new List<int>();
+        foreach (string avatar_role in avatar_roles)
+            avatar_roles_indexs.Add(roles.IndexOf(avatar_role));
+        return avatar_roles_indexs;
     }
 }
