@@ -31,7 +31,7 @@ public class Clock : MonoBehaviour
         else 
         {
             clockText.text = "0:00";
-            if (GameManager.currLevel != 0)
+            if (GameManager.currLevel > 0 && GameManager.currLevel < 4)
                 GameManager.NextLevel();
         }
     }
@@ -39,5 +39,10 @@ public class Clock : MonoBehaviour
     public static void ResetClock()
     {
         timeRemaining = 180;
+    }
+
+    public static void EndGame()
+    {
+        timeRemaining = -1;
     }
 }
