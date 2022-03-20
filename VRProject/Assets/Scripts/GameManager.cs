@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     private static List<Block> allBlocksStatic;
 
     // Game state
-    static int numOfPlayers = 2;
+    public static int numOfPlayers = 2;
 
     // Start is called before the first frame update
     void Start()

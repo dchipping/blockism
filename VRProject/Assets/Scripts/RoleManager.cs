@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 {
-    private List<string> roles = new List<string> {"red", "yellow", "green", "blue"};
+    private List<string> roles = new List<string> {"red", "yellow", "blue", "green"};
 
     private enum Roles
     {
@@ -76,10 +76,10 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
 
-        Join();
+        JoinRoom();
     }
 
-    private void Join()
+    private void JoinRoom()
     {
         if (string.IsNullOrEmpty(join_code))
         {
@@ -100,7 +100,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
             return; 
         }
 
-        Join();
+        JoinRoom();
     }
 
     private void AddAvatarAndRole(Ubiq.Avatars.Avatar avatar)
@@ -133,8 +133,10 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     private void OnJoinedRoom(IRoom room)
     {
+        var avatars = avatar_manager.Avatars;
+
         // room with more than 1 avatar already has master peer
-        if (avatar_manager.Avatars.Count() > 1)
+        if (avatars.Count() > 1)
         {
             return;
         }
@@ -148,9 +150,9 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         }
 
         // set first avatar as master peer      
-        var owner_avatar = avatar_manager.Avatars.First();
+        var owner_avatar = avatars.First();
         master_peer_id = owner_avatar.Peer.UUID;
-        owner_avatar.color = roles.First();
+        owner_avatar.color = roles[avatars.Count() % GameManager.numOfPlayers];
 
         var result = avatar_manager.AvatarCatalogue.prefabs[roles.IndexOf(owner_avatar.color)];
 
@@ -178,18 +180,18 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         }
 
         var avatars = avatar_manager.Avatars;
-        Dictionary<string, int> role_count = new Dictionary<string, int>();
+        /*Dictionary<string, int> role_count = new Dictionary<string, int>();
 
         // loop through roles and initiate Dict  
         roles.ForEach(role => role_count.Add(role, 0));
-
+*/
         foreach (var avatar in avatars)
         {
             // avatar already has a role 
             if (!string.IsNullOrEmpty(avatar.color))
             {
-                // register the role with the Dict 
-                role_count[avatar.color] += 1;
+              /*  // register the role with the Dict 
+                role_count[avatar.color] += 1;*/
 
                 // mainain an internal list of ids and roles 
                 AddAvatarAndRole(avatar);
@@ -206,7 +208,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
        }
 
         // choose role with min count as current avatar's role 
-        current_avatar.color = role_count.Aggregate((l, r) => l.Value < r.Value ? l : r).Key;
+        current_avatar.color = roles[avatars.Count() % GameManager.numOfPlayers];
 
         // peer["ubiq.avatar.prefab"] = GameObject.FindGameObjectWithTag(current_avatar.color).name;
 
