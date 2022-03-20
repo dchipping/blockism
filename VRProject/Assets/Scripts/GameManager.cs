@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     private static List<HitBox> hitboxesStatic;
 
     // Game state
-    static int numOfPlayers = 1;
+    static int numOfPlayers = 3;
     public static int score = 0;
     public static Queue<Block> conveyerQueue = new Queue<Block>();
 

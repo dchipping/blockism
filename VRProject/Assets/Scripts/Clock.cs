@@ -28,10 +28,11 @@ public class Clock : MonoBehaviour
             else
                 clockText.text = mins.ToString() + ":" + secs.ToString();
         }
-        else
+        else 
         {
             clockText.text = "0:00";
-            GameManager.NextLevel();
+            if (GameManager.currLevel != 0)
+                GameManager.NextLevel();
         }
     }
 

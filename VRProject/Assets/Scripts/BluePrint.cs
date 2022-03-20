@@ -20,16 +20,19 @@ public class BluePrint : MonoBehaviour
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
         if (whichLevel == GameManager.currLevel)
         {
-            foreach (var r in renderers)
+            gameObject.SetActive(true);
+            foreach (Transform child in transform)
             {
-                r.enabled = true;
+                child.gameObject.SetActive(true);
             }
+
         }
         else
         {
-            foreach (var r in renderers)
+            gameObject.SetActive(false);
+            foreach (Transform child in transform)
             {
-                r.enabled = false;
+                child.gameObject.SetActive(false);
             }
         }
     }
