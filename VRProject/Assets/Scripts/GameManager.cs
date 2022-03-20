@@ -19,9 +19,10 @@ public class GameManager : MonoBehaviour
     // A list of blueprints
     public List<BluePrint> bluePrints;
     private static List<BluePrint> bluePrintsStatic;
+    public static int[] submissionsRemaining = new int[] {1, 1, 1};
 
     // Game state
-    static int numOfPlayers = 2;
+    static int numOfPlayers = 1;
     static Queue<Block> conveyerQueue = new Queue<Block>();
 
     // Current level

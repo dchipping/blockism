@@ -1,24 +1,47 @@
 ﻿<Properties StartupConfiguration="{ED4E5404-283F-BF83-1E68-BF8BEFFEADDD}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Samples/Ubiq/0.2.0-alpha.4/Samples/Intro/Scripts/SocialMenuRequestHandler.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/SubmissionZone.cs">
     <Files>
-      <File FileName="Assets/Scripts/GameManager.cs" Line="9" Column="1" />
-      <File FileName="Assets/Scripts/HitBox.cs" Line="65" Column="1" />
-      <File FileName="Assets/Scripts/Clock.cs" Line="10" Column="12" />
-      <File FileName="Assets/Samples/Ubiq/0.2.0-alpha.4/Samples/Intro/Scripts/SocialMenuRequestHandler.cs" Line="19" Column="1" />
+      <File FileName="Assets/Scripts/GameManager.cs" Line="92" Column="1" />
+      <File FileName="Assets/Scripts/HitBox.cs" Line="1" Column="1" />
+      <File FileName="Assets/Samples/Ubiq/0.2.0-alpha.4/Samples/Intro/Scripts/SocialMenuRequestHandler.cs" />
+      <File FileName="Assets/Scripts/Block.cs" Line="25" Column="34" />
+      <File FileName="Assets/Scripts/BluePrint.cs" Line="11" Column="1" />
+      <File FileName="Assets/Scripts/Conveyor.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/SubmissionZone.cs" Line="25" Column="1" />
+      <File FileName="Assets/Scripts/Clock.cs" Line="40" Column="27" />
+      <File FileName="Assets/Scripts/Score.cs" Line="9" Column="20" />
+      <File FileName="Assets/Environment/Conveyor/Scripts/ScrollTexture.cs" Line="47" Column="1" />
+      <File FileName="Packages/ubiq-0.2.0-alpha.4/Runtime/Logging/LogManager.cs" Line="107" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="VRProject" expanded="True" selected="True" />
+          <Node name="VRProject" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Environment" expanded="True">
+                <Node name="Conveyor" expanded="True">
+                  <Node name="Scripts" expanded="True" />
+                </Node>
+              </Node>
+              <Node name="Scripts" expanded="True">
+                <Node name="SubmissionZone.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="d8e67873-370a-48ab-989d-508eb9338078" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="190f6842-8a88-4772-854c-b6686d46c947" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <FunctionBreakpoint enabled="false" hitAction="PrintExpression" traceExpression="Value of currLevel = {currLevel}" line="71" column="9" function="GameManager.NextLevel" language="C#" params="" />
+      <FunctionBreakpoint enabled="false" line="36" column="17" function="SubmissionZone.OnCollisionEnter" language="C#" />
+      <FunctionBreakpoint enabled="false" line="46" column="9" function="SubmissionZone.OnTriggerEnter" language="C#" />
+      <Breakpoint file="/Users/daniel/UCL_CGVI/Git/comp0113-virtual-environments/VRProject/Assets/Scripts/SubmissionZone.cs" relfile="Assets/Scripts/SubmissionZone.cs" line="25" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
 </Properties>
