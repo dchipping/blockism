@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,6 +20,11 @@ public class GameManager : MonoBehaviour
     // Game state
     public static int numOfPlayers = 2;
 
+    // Event that randomly changes roles of the players 
+    UnityEvent role_change;
+
+    RoleManager role_manager; 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +33,17 @@ public class GameManager : MonoBehaviour
         blockColoursStatic = blockColours;
         allBlocksStatic = allBlocks;
 
+        role_manager = GameObject.Find("RoleManager").GetComponent<RoleManager>();
+
+        role_change = new UnityEvent();
+        role_change.AddListener(OnRoleChange);
+
         StartGame();
+    }
+
+    void OnRoleChange()
+    {
+        role_manager.ShuffleRoles();
     }
 
     // Update is called once per frame

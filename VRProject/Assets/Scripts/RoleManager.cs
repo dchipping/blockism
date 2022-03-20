@@ -40,6 +40,8 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     private uint join_tries = 0;
 
+    private static System.Random rng;
+
     struct Message
     {
 
@@ -62,6 +64,8 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
     // Start is called before the first frame update
     void Start()
     {
+        rng = new System.Random();
+
         context = NetworkScene.Register(this);
 
         room_client = context.scene.GetComponentInChildren<RoomClient>();
@@ -119,6 +123,33 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         avatar_ids.RemoveAt(peer_index);
     }
 
+    // randomly shuffle the roles of the players 
+    public void ShuffleRoles()
+    {
+        // only master peer can change roles and send message updates 
+        if (room_client.Me.UUID != master_peer_id)
+        {
+            return; 
+        }
+
+        var avatars = avatar_manager.Avatars;
+        var role_check = avatar_roles;
+        int no_of_avatars = avatars.Count();
+
+        // shuffle elements in avatar roles 
+        avatar_roles.OrderBy(role => rng.Next()).ToList();
+
+        var local_avatar = avatar_manager.LocalAvatar;
+
+        local_avatar.color = avatar_roles[avatar_ids.IndexOf(local_avatar.Peer.UUID)];
+
+        var prefab = avatar_manager.AvatarCatalogue.prefabs[roles.IndexOf(local_avatar.color)];
+
+        room_client.Me["ubiq.avatar.prefab"] = prefab.name;
+
+        SendMessageUpdate();
+    }
+
     private void SendMessageUpdate()
     {
         Message message;
@@ -152,13 +183,13 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         // set first avatar as master peer      
         var owner_avatar = avatars.First();
         master_peer_id = owner_avatar.Peer.UUID;
-        owner_avatar.color = roles[avatars.Count() % GameManager.numOfPlayers];
+        owner_avatar.color = roles[(avatars.Count()-1) % GameManager.numOfPlayers];
 
-        var result = avatar_manager.AvatarCatalogue.prefabs[roles.IndexOf(owner_avatar.color)];
+        var prefab = avatar_manager.AvatarCatalogue.prefabs[roles.IndexOf(owner_avatar.color)];
 
         /*avatar_manager.CreateLocalAvatar(result);*/
 
-        room_client.Me["ubiq.avatar.prefab"] = result.name;
+        room_client.Me["ubiq.avatar.prefab"] = prefab.name;
 
         avatar_ids = new List<string>();
         avatar_roles = new List<string>();
@@ -208,7 +239,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
        }
 
         // choose role with min count as current avatar's role 
-        current_avatar.color = roles[avatars.Count() % GameManager.numOfPlayers];
+        current_avatar.color = roles[(avatars.Count()-1) % GameManager.numOfPlayers];
 
         // peer["ubiq.avatar.prefab"] = GameObject.FindGameObjectWithTag(current_avatar.color).name;
 
@@ -267,29 +298,34 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
     {
         var msg = message.FromJson<Message>();
 
-        // utilize message update only if sent my master peer in the same room 
-        /*if (msg.room_id != room_client.Room.UUID)
+        // utilize message update only if not master peer 
+        if (msg.master_peer_id == room_client.Me.UUID)
+        {
+            return;
+        }
+
+        if (string.IsNullOrEmpty(msg.join_code))
         {
             return; 
-        }*/
+        }
+
+        if (msg.avatar_ids.Count() == 0 && msg.avatar_roles.Count() == 0)
+        {
+            return;
+        }
+
+        var avatars = avatar_manager.Avatars;
+
+        if (avatars.Count() != msg.avatar_roles.Count())
+        {
+            return;
+        }
 
         avatar_ids = msg.avatar_ids;
         avatar_roles = msg.avatar_roles;
         master_peer_id = msg.master_peer_id;
         room_id = msg.room_id;
         join_code = msg.join_code;
-
-        if (avatar_ids.Count() == 0 && avatar_roles.Count() == 0)
-        {
-            return; 
-        }
-
-        var avatars = avatar_manager.Avatars;
-
-        if (avatars.Count() != avatar_roles.Count())
-        {
-            return;
-        }
 
         foreach (var avatar in avatars)
         {
