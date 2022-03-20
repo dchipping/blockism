@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Ubiq.Messaging;
+using Ubiq.Rooms;
 
-public class GameManager : MonoBehaviour
+
+public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
 {
     // Helper Signs
     public List<GameObject> helperSigns;
@@ -44,6 +47,10 @@ public class GameManager : MonoBehaviour
 
     public RoleManager roleManager;
 
+    // Networking components
+    NetworkId INetworkObject.Id => new NetworkId("a13ba05dbb9ef8fc");
+    private NetworkContext context;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -63,8 +70,19 @@ public class GameManager : MonoBehaviour
         
     }
 
+    struct Message
+    {
+        public bool start;
+
+        public Message(bool start)
+        {
+            this.start = start;
+        }
+    }
+
     public void StartGame()
     {
+        SendMessageUpdate();
         Debug.Log("Starting Game!");
         foreach (GameObject sign in helperSignsStatic) // Loop through List with foreach
         {
@@ -187,5 +205,18 @@ public class GameManager : MonoBehaviour
 
         for (int i = 15; i < 30; i++)
             conveyerQueue.Enqueue(allBlocksStatic[i]);
+    }
+
+    private void SendMessageUpdate()
+    {
+        Message startMessage = new Message(true);
+        context.SendJson(startMessage);
+    }
+
+    public void ProcessMessage(ReferenceCountedSceneGraphMessage message)
+    {
+        var msg = message.FromJson<Message>();
+        if (msg.start == true)
+            StartGame();
     }
 }
