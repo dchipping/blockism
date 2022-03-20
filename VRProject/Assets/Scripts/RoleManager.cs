@@ -95,7 +95,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
     {
         join_tries++;
 
-        if (join_tries > 1000)
+        if (join_tries > 100)
         {
             return; 
         }
