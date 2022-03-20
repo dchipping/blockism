@@ -84,7 +84,6 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     public void StartGame()
     {
-        SendMessageUpdate();
         Debug.Log("Starting Game!");
         foreach (GameObject sign in helperSignsStatic) // Loop through List with foreach
         {
@@ -209,7 +208,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
             conveyerQueue.Enqueue(allBlocksStatic[i]);
     }
 
-    private void SendMessageUpdate()
+    public void SendMessageUpdate()
     {
         Message startMessage = new Message(true);
         context.SendJson(startMessage);
