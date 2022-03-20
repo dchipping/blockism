@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -41,6 +42,8 @@ public class GameManager : MonoBehaviour
     // Current level
     public static int currLevel;
 
+    public RoleManager roleManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -69,6 +72,8 @@ public class GameManager : MonoBehaviour
         }
 
         // Colour all blocks in scene
+        List<int> colours = roleManager.GetAvatarColourIndexes();
+        numOfPlayers = colours.Count();
         for (int i = 0; i < allBlocksStatic.Count; i++)
         {
             // How many colours will be used
@@ -77,7 +82,8 @@ public class GameManager : MonoBehaviour
                 numberOfColours = blockColoursStatic.Count;
 
             // Tell blocks what materials they should use
-            int colourIdx = i % numberOfColours;
+            int avatarIdx = i % numberOfColours;
+            int colourIdx = colours[avatarIdx];
             allBlocksStatic[i].SetColour(colourIdx);
 
             
