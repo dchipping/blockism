@@ -13,6 +13,7 @@ public class HitBox : MonoBehaviour
     public bool filled = false;
     public int correctColourIdx;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +37,8 @@ public class HitBox : MonoBehaviour
         {
             Collider collider = pieceColliders[i];
             Block block = pieces[i].GetComponent<Block>();
-            if (GetIntersectionPercent(collider, thisCollider) > 0.5 && !filled && !block.filling)
+            Block parentBlock = transform.parent.GetComponent<Block>();
+            if (GetIntersectionPercent(collider, thisCollider) > 0.5 && !filled && !block.filling && (parentBlock.grasped != null || block.grasped != null))
             {
                 FillHitBox(pieces[i]);
                 if (transform.childCount > 0)

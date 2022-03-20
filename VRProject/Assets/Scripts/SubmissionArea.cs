@@ -6,6 +6,8 @@ public class SubmissionArea : MonoBehaviour
 {
     public TMPro.TextMeshProUGUI scoreText;
     int submittedStructures = 0;
+    List<string> alreadySubmitted = new List<string>();
+
 
     // Start is called before the first frame update
     void Start()
@@ -21,12 +23,12 @@ public class SubmissionArea : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Check if its a root objects
+        /// Check if its a root objects
         if (other.gameObject.transform.parent == null)
         {
             // if the structure isnt being held
             Block b = other.gameObject.GetComponent<Block>();
-            if (b != null && b.grasped == null)
+            if (b != null && b.grasped == null && !alreadySubmitted.Contains(other.gameObject.name))
             {
                 // How many block were misplaced in the structure?
                 int correctBlocks = 0;
@@ -53,7 +55,7 @@ public class SubmissionArea : MonoBehaviour
 
                 // Update score
                 GameManager.score += correctBlocks;
-                scoreText.text = "$" + GameManager.score.ToString();
+                scoreText.text = "$" + (GameManager.score * 10).ToString();
 
                 // Teleport object somewhere else
                 other.gameObject.transform.position = new Vector3(0, -9.5f, 28.75f);
@@ -65,6 +67,8 @@ public class SubmissionArea : MonoBehaviour
                     submittedStructures = 0;
                     GameManager.NextLevel();
                 }
+
+                alreadySubmitted.Add(other.gameObject.name);
             }
         }
     }
