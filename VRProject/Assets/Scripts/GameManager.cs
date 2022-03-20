@@ -224,6 +224,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
     public void SendMessageUpdate()
     {
         Message startMessage = new Message(true);
+        startMessage.start = true;
         context.SendJson(startMessage);
     }
 
