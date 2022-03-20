@@ -277,7 +277,17 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         room_id = msg.room_id;
         join_code = msg.join_code;
 
+        if (avatar_ids.Count() == 0 && avatar_roles.Count() == 0)
+        {
+            return; 
+        }
+
         var avatars = avatar_manager.Avatars;
+
+        if (avatars.Count() != avatar_roles.Count())
+        {
+            return;
+        }
 
         foreach (var avatar in avatars)
         {
