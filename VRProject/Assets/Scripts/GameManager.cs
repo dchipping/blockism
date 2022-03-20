@@ -54,6 +54,8 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
     // Start is called before the first frame update
     void Start()
     {
+        context = NetworkScene.Register(this);
+
         // Initalize static variables
         helperSignsStatic = helperSigns;
         clickSoundsStatic = clickSound;
