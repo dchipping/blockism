@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
 
     // Current level
     public static int currLevel;
+    public static BPRoomDoor bpRoomDoor;
 
     // Start is called before the first frame update
     void Start()
@@ -75,6 +76,7 @@ public class GameManager : MonoBehaviour
             allBlocksStatic[i].SetColour(colourIdx);
         }
         currLevel = 0;
+        bpRoomDoor.ChangeColour(0);
         NextLevel();
     }
 
@@ -106,5 +108,6 @@ public class GameManager : MonoBehaviour
         {
             bp.UpdateVisibility();
         }
+        bpRoomDoor.ChangeColour(currLevel);
     }
 }
