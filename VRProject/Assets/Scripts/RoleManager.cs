@@ -10,14 +10,6 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 {
     private List<string> roles = new List<string> {"red", "yellow", "blue", "green"};
 
-    private enum Roles
-    {
-        red, 
-        yellow, 
-        green, 
-        blue
-    };
-
     private NetworkContext context;
 
     private RoomClient room_client;
@@ -28,12 +20,9 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
     private List<string> avatar_ids;
     private List<string> avatar_roles;
     private string master_peer_id;
-    private string room_id;
     // set of variables for messages
 
     NetworkId INetworkObject.Id => new NetworkId("a15ca05dbb9ef8ec");
-
-    private string last_requested_join_code;
 
     private string room_name = "Blockism";
 
@@ -50,14 +39,12 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         public List<string> avatar_ids;
         public List<string> avatar_roles;
         public string master_peer_id;
-        public string room_id;
 
         public Message(List<string> ai, List<string> ar, string mpi, string rid)
         {
             this.avatar_ids = ai;
             this.avatar_roles = ar;
             this.master_peer_id = mpi;
-            this.room_id = rid;
         }
     }
 
@@ -74,7 +61,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         room_client.OnJoinedRoom.AddListener(OnJoinedRoom);
 
-        room_client.OnRoomUpdated.AddListener(OnRoomUpdated);
+        /*room_client.OnRoomUpdated.AddListener(OnRoomUpdated);*/
 
         room_client.OnRoomsDiscovered.AddListener(OnRoomsDiscovered);
 
@@ -97,6 +84,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
             }
         }
 
+        // check if master peer has left and pick a new one 
         if (room_client.Room.Name == room_name && !string.IsNullOrEmpty(master_peer_id))
         {
             var avatars = avatar_manager.Avatars;
@@ -113,12 +101,44 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
             if (!found_master)
             {
+                var peer_index = avatar_ids.IndexOf(master_peer_id);
+                avatar_roles.RemoveAt(peer_index);
+                avatar_ids.RemoveAt(peer_index);
+
                 master_peer_id = avatars.First().Peer.UUID;
 
                 SendMessageUpdate();
             }
         }
 
+        // check if the a peer has left and update lists if they have (only for master peer)
+        if ((room_client.Room.Name == room_name) && (room_client.Me.UUID == master_peer_id))
+        {
+            var avatars = avatar_manager.Avatars;
+
+            foreach (var id in avatar_ids)
+            {
+                bool id_found = false; 
+
+                foreach(var avatar in avatars)
+                {
+                    if (avatar.Peer.UUID == id)
+                    {
+                        id_found = true;
+                        break; 
+                    }
+                }
+
+                if (!id_found)
+                {
+                    var peer_index = avatar_ids.IndexOf(id);
+                    avatar_roles.RemoveAt(peer_index);
+                    avatar_ids.RemoveAt(peer_index);
+                }
+            }
+            
+            SendMessageUpdate();
+        }
     }
 
     private void OnRoomsDiscovered(List<IRoom> rooms, RoomsDiscoveredRequest request)
@@ -187,7 +207,6 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         message.avatar_ids = avatar_ids;
         message.avatar_roles = avatar_roles;
         message.master_peer_id = master_peer_id;
-        message.room_id = room_id;
 
         context.SendJson(message);
     }
@@ -221,7 +240,6 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         avatar_ids = new List<string>();
         avatar_roles = new List<string>();
-        room_id = room.UUID;
 
         avatar_ids.Add(owner_avatar.Peer.UUID);
         avatar_roles.Add(owner_avatar.color);
@@ -274,14 +292,14 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         SendMessageUpdate();
     }
 
-    private void OnRoomUpdated(IRoom room)
+    /*private void OnRoomUpdated(IRoom room)
     {
         // peer is leaving room if room name, uuid and join code are null 
         if (string.IsNullOrEmpty(room.JoinCode) 
                 && string.IsNullOrEmpty(room.Name) 
                 && string.IsNullOrEmpty(room.UUID))
         {
-            // if peer used to be master, do something
+            // if peer used to be master, pick a new master and send a messge update 
             if (master_peer_id == room_client.Me.UUID)
             {
                 // remove ourselves from lists
@@ -303,11 +321,10 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
             // reset variables since we are entering empty room
             avatar_ids = new List<string>();
             avatar_roles = new List<string>();
-            room_id = "";
             master_peer_id = "";
         }
 
-    }
+    }*/
 
     void INetworkComponent.ProcessMessage(ReferenceCountedSceneGraphMessage message)
     {
@@ -324,7 +341,6 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         avatar_ids = msg.avatar_ids;
         avatar_roles = msg.avatar_roles;
         master_peer_id = msg.master_peer_id;
-        room_id = msg.room_id;
 
         foreach (var avatar in avatars)
         {

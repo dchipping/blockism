@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
     private static List<HitBox> hitboxesStatic;
 
     // Game state
-    public static int numOfPlayers = 3;
+    public static int numOfPlayers = 4;
 
     // Event that randomly changes roles of the players 
     UnityEvent role_change;
