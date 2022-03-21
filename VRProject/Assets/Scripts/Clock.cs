@@ -38,7 +38,7 @@ public class Clock : MonoBehaviour
 
     public static void ResetClock()
     {
-        timeRemaining = 180;
+        timeRemaining = 10;
     }
 
     public static void EndGame()
