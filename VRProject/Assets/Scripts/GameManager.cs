@@ -56,6 +56,10 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
     NetworkId INetworkObject.Id => new NetworkId("a13ba05dbb9ef8fc");
     private NetworkContext context;
 
+    // Blueprint Room Door
+    public BPRoomDoor bPRoomDoor;
+    public static BPRoomDoor bPRoomDoorStatic;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -75,6 +79,8 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         bluePrintsStatic = bluePrints;
         bluePrintBlocksStatic = bluePrintBlocks;
         hitboxesStatic = hitboxes;
+
+        bPRoomDoorStatic = bPRoomDoor;
     }
 
     void OnRoleChange()
@@ -140,6 +146,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         currLevel = 0;
 
         NextLevel();
+        bPRoomDoorStatic.ChangeColour(0);
         StartCoroutine(SpawnBlocks());
     }
 
@@ -178,6 +185,8 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         {
             bp.UpdateVisibility();
         }
+
+        bPRoomDoorStatic.ChangeColour(currLevel);
 
         if (currLevel == 1)
             Level1();
