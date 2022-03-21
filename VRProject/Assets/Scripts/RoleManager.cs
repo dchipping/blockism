@@ -118,6 +118,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
                 SendMessageUpdate();
             }
         }
+
     }
 
     private void OnRoomsDiscovered(List<IRoom> rooms, RoomsDiscoveredRequest request)
@@ -140,6 +141,9 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         {
             avatar_ids.Add(avatar.Peer.UUID);
             avatar_roles.Add(avatar.color);
+        } else
+        {
+            avatar_roles[avatar_ids.IndexOf(avatar.Peer.UUID)] = avatar.color;
         }
     }
 
@@ -264,8 +268,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         // choose role with min count as current avatar's role 
         current_avatar.color = role_count.Aggregate((l, r) => l.Value < r.Value ? l : r).Key;
 
-        // peer["ubiq.avatar.prefab"] = GameObject.FindGameObjectWithTag(current_avatar.color).name;
-
+        // update lists 
         AddAvatarAndRole(current_avatar);
 
         SendMessageUpdate();
