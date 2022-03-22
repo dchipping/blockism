@@ -10,14 +10,6 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 {
     private List<string> roles = new List<string> {"red", "yellow", "blue", "green"};
 
-    private enum Roles
-    {
-        red, 
-        yellow, 
-        green, 
-        blue
-    };
-
     private NetworkContext context;
 
     private RoomClient room_client;
@@ -28,36 +20,31 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
     private List<string> avatar_ids;
     private List<string> avatar_roles;
     private string master_peer_id;
-    private string room_id;
-    private string join_code;
     // set of variables for messages
 
     NetworkId INetworkObject.Id => new NetworkId("a15ca05dbb9ef8ec");
 
-    private string last_requested_join_code;
-
     private string room_name = "Blockism";
-
-    private uint join_tries = 0;
 
     private static System.Random rng;
 
+    private uint discover_rooms_count = 0;
+
+    private float room_refresh_rate = 2.0f;
+
+    private float next_room_refresh_time = -1;
+
     struct Message
     {
-
         public List<string> avatar_ids;
         public List<string> avatar_roles;
         public string master_peer_id;
-        public string room_id;
-        public string join_code;
 
-        public Message(List<string> ai, List<string> ar, string mpi, string rid, string jcode)
+        public Message(List<string> ai, List<string> ar, string mpi, string rid)
         {
             this.avatar_ids = ai;
             this.avatar_roles = ar;
             this.master_peer_id = mpi;
-            this.room_id = rid;
-            this.join_code = jcode;
         }
     }
 
@@ -74,37 +61,98 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         room_client.OnJoinedRoom.AddListener(OnJoinedRoom);
 
-        room_client.OnRoomUpdated.AddListener(OnRoomUpdated);
+        /*room_client.OnRoomUpdated.AddListener(OnRoomUpdated);*/
 
-        room_client.OnJoinRejected.AddListener(OnJoinRejected);
+        room_client.OnRoomsDiscovered.AddListener(OnRoomsDiscovered);
 
         avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
-
-       /* JoinRoom();*/
     }
 
-    private void JoinRoom()
+    void Update()
     {
-        if (string.IsNullOrEmpty(join_code))
+        if (Time.realtimeSinceStartup > next_room_refresh_time)
         {
-            room_client.Join(name: room_name, publish: true);
-        } 
-        else
+            next_room_refresh_time = Time.realtimeSinceStartup + room_refresh_rate;
+
+            room_client.DiscoverRooms();
+
+            discover_rooms_count++;
+
+            if (discover_rooms_count == 2 && string.IsNullOrEmpty(room_client.Room.Name))
+            {
+                room_client.Join(name: room_name, publish: true);
+            }
+        }
+
+        // check if master peer has left and pick a new one 
+        if (room_client.Room.Name == room_name && !string.IsNullOrEmpty(master_peer_id))
         {
-            room_client.Join(joincode: join_code);
+            var avatars = avatar_manager.Avatars;
+            bool found_master = false; 
+
+            foreach(var avatar in avatars)
+            {
+                if (avatar.Peer.UUID == master_peer_id)
+                {
+                    found_master = true;
+                    break; 
+                }
+            }
+
+            if (!found_master)
+            {
+                var peer_index = avatar_ids.IndexOf(master_peer_id);
+                avatar_roles.RemoveAt(peer_index);
+                avatar_ids.RemoveAt(peer_index);
+
+                master_peer_id = avatars.First().Peer.UUID;
+
+                SendMessageUpdate();
+            }
+        }
+
+        // check if the a peer has left and update lists if they have (only for master peer)
+        if ((room_client.Room.Name == room_name) && (room_client.Me.UUID == master_peer_id))
+        {
+            var avatars = avatar_manager.Avatars;
+
+            foreach (var id in avatar_ids)
+            {
+                bool id_found = false; 
+
+                foreach(var avatar in avatars)
+                {
+                    if (avatar.Peer.UUID == id)
+                    {
+                        id_found = true;
+                        break; 
+                    }
+                }
+
+                if (!id_found)
+                {
+                    var peer_index = avatar_ids.IndexOf(id);
+                    avatar_roles.RemoveAt(peer_index);
+                    avatar_ids.RemoveAt(peer_index);
+                }
+            }
+            
+            SendMessageUpdate();
         }
     }
 
-    private void OnJoinRejected(Rejection rejection)
+    private void OnRoomsDiscovered(List<IRoom> rooms, RoomsDiscoveredRequest request)
     {
-        join_tries++;
-
-        if (join_tries > 100)
+        if (string.IsNullOrEmpty(request.joincode))
         {
-            return; 
+            foreach (var room in rooms)
+            {
+                if (room.Name == room_name)
+                {
+                    room_client.Join(room.JoinCode);
+                }
+            }
         }
-
-        JoinRoom();
     }
 
     private void AddAvatarAndRole(Ubiq.Avatars.Avatar avatar)
@@ -113,6 +161,9 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         {
             avatar_ids.Add(avatar.Peer.UUID);
             avatar_roles.Add(avatar.color);
+        } else
+        {
+            avatar_roles[avatar_ids.IndexOf(avatar.Peer.UUID)] = avatar.color;
         }
     }
 
@@ -156,8 +207,6 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         message.avatar_ids = avatar_ids;
         message.avatar_roles = avatar_roles;
         message.master_peer_id = master_peer_id;
-        message.room_id = room_id;
-        message.join_code = join_code;
 
         context.SendJson(message);
     }
@@ -183,18 +232,14 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         // set first avatar as master peer      
         var owner_avatar = avatars.First();
         master_peer_id = owner_avatar.Peer.UUID;
-        owner_avatar.color = roles[(avatars.Count()-1) % GameManager.numOfPlayers];
+        owner_avatar.color = roles.First();
 
         var prefab = avatar_manager.AvatarCatalogue.prefabs[roles.IndexOf(owner_avatar.color)];
-
-        /*avatar_manager.CreateLocalAvatar(result);*/
 
         room_client.Me["ubiq.avatar.prefab"] = prefab.name;
 
         avatar_ids = new List<string>();
         avatar_roles = new List<string>();
-        room_id = room.UUID;
-        join_code = room.JoinCode;
 
         avatar_ids.Add(owner_avatar.Peer.UUID);
         avatar_roles.Add(owner_avatar.color);
@@ -211,18 +256,18 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         }
 
         var avatars = avatar_manager.Avatars;
-        /*Dictionary<string, int> role_count = new Dictionary<string, int>();
+        Dictionary<string, int> role_count = new Dictionary<string, int>();
 
         // loop through roles and initiate Dict  
         roles.ForEach(role => role_count.Add(role, 0));
-*/
+
         foreach (var avatar in avatars)
         {
             // avatar already has a role 
             if (!string.IsNullOrEmpty(avatar.color))
             {
-              /*  // register the role with the Dict 
-                role_count[avatar.color] += 1;*/
+                // register the role with the Dict 
+                role_count[avatar.color] += 1;
 
                 // mainain an internal list of ids and roles 
                 AddAvatarAndRole(avatar);
@@ -239,23 +284,22 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
        }
 
         // choose role with min count as current avatar's role 
-        current_avatar.color = roles[(avatars.Count()-1) % GameManager.numOfPlayers];
+        current_avatar.color = role_count.Aggregate((l, r) => l.Value < r.Value ? l : r).Key;
 
-        // peer["ubiq.avatar.prefab"] = GameObject.FindGameObjectWithTag(current_avatar.color).name;
-
+        // update lists 
         AddAvatarAndRole(current_avatar);
 
         SendMessageUpdate();
     }
 
-    private void OnRoomUpdated(IRoom room)
+    /*private void OnRoomUpdated(IRoom room)
     {
         // peer is leaving room if room name, uuid and join code are null 
         if (string.IsNullOrEmpty(room.JoinCode) 
                 && string.IsNullOrEmpty(room.Name) 
                 && string.IsNullOrEmpty(room.UUID))
         {
-            // if peer used to be master, do something
+            // if peer used to be master, pick a new master and send a messge update 
             if (master_peer_id == room_client.Me.UUID)
             {
                 // remove ourselves from lists
@@ -277,22 +321,10 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
             // reset variables since we are entering empty room
             avatar_ids = new List<string>();
             avatar_roles = new List<string>();
-            room_id = "";
-            join_code = "";
             master_peer_id = "";
         }
 
-    }
-
-    // runs every frame 
-    void Update()
-    {
-        // send message every timestep
-        if (room_client.Me.UUID == master_peer_id)
-        {
-            SendMessageUpdate();
-        }
-    }
+    }*/
 
     void INetworkComponent.ProcessMessage(ReferenceCountedSceneGraphMessage message)
     {
@@ -304,28 +336,11 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
             return;
         }
 
-        if (string.IsNullOrEmpty(msg.join_code))
-        {
-            return; 
-        }
-
-        if (msg.avatar_ids.Count() == 0 && msg.avatar_roles.Count() == 0)
-        {
-            return;
-        }
-
         var avatars = avatar_manager.Avatars;
-
-        if (avatars.Count() != msg.avatar_roles.Count())
-        {
-            return;
-        }
 
         avatar_ids = msg.avatar_ids;
         avatar_roles = msg.avatar_roles;
         master_peer_id = msg.master_peer_id;
-        room_id = msg.room_id;
-        join_code = msg.join_code;
 
         foreach (var avatar in avatars)
         {
