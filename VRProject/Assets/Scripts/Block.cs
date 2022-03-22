@@ -155,6 +155,9 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     public void Release()
     {
+        if (!grasped)
+            return; 
+
         bool outOfRange = HandOutOfRange(grasped);
         grasped = null;
         being_grasped = false;
