@@ -231,7 +231,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AvatarCatalogue: {fileID: 11400000, guid: 7ae31e03aeffdcb4799c68ce5e3742fb, type: 2}
-  LocalPrefabUuid: Floating BodyA Avatar
+  LocalPrefabUuid: Floating Avatar
 --- !u!1 &9015508115495883622
 GameObject:
   m_ObjectHideFlags: 0
