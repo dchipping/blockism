@@ -16,6 +16,7 @@ public class HitBox : MonoBehaviour, INetworkComponent, INetworkObject
     public bool filled = false;
     public int correctColourIdx;
 
+    // Networking 
     public NetworkId shared_id;
     private NetworkContext context;
     // 16-digit hex
