@@ -68,7 +68,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         {
             rootBlock.gameObject.transform.position = msg.position;
             rootBlock.gameObject.transform.rotation = msg.rotation;
-            being_grasped = msg.being_grasped;
+            rootBlock.being_grasped = msg.being_grasped;
             last_owner_id = msg.last_owner_id;
             rootBlock.rb.isKinematic = msg.is_kinematic;
         }
@@ -100,7 +100,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         message.position = transform.position;
         message.rotation = transform.rotation;
         message.who = shared_id;
-        message.being_grasped = being_grasped;
+        message.being_grasped = rootBlock.being_grasped;
         message.last_owner_id = last_owner_id;
         message.is_kinematic = rootBlock.rb.isKinematic;
 
@@ -118,7 +118,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     void IGraspable.Grasp(Hand controller)
     {
-        if (being_grasped)
+        if (rootBlock.being_grasped)
         {
             return;
         }
@@ -139,7 +139,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         }
 
         grasped = controller;
-        being_grasped = true;
+        rootBlock.being_grasped = true;
         rootBlock.rb.isKinematic = true;
 
         last_owner_id = client.Me.UUID;
@@ -156,7 +156,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
     public void Release()
     {
         grasped = null;
-        being_grasped = false;
+        rootBlock.being_grasped = false;
 
         this.rootBlock.rb.isKinematic = false;
 
@@ -167,7 +167,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
     void FixedUpdate()
     {
         // If the block is held by a player
-        if (being_grasped && grasped)
+        if (rootBlock.being_grasped && grasped)
         {
             // Match the position and orientation of the hand
             rootBlock.transform.position = grasped.transform.position;
