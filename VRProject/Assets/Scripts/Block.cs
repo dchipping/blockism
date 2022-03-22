@@ -167,7 +167,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
     void FixedUpdate()
     {
         // If the block is held by a player
-        if (being_grasped && grasped)
+        if (being_grasped && grasped && last_owner_id == client.Me.UUID)
         {
             // Match the position and orientation of the hand
             rootBlock.transform.position = grasped.transform.position;
