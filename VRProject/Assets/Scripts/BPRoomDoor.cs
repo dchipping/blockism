@@ -7,14 +7,15 @@ public class BPRoomDoor : MonoBehaviour
     private List<string> colours;
     private List<int> colour_indexes;
 
-    RoleManager role_manager;
+    private RoleManager role_manager;
+    private Ubiq.Avatars.AvatarManager avatar_manager;
+    private Ubiq.Avatars.Avatar local_avatar = null;
 
     // Start is called before the first frame update
     public void Init()
     {
-        MeshRenderer mesh_rend = gameObject.GetComponent<MeshRenderer>();
-        mesh_rend.material = GameManager.blockColoursStatic[0];
         role_manager = GameObject.Find("RoleManager").GetComponent<RoleManager>();
+        avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
         colours = role_manager.GetAvatarRoles();
         colour_indexes = role_manager.GetAvatarColourIndexes();
     }
@@ -32,14 +33,28 @@ public class BPRoomDoor : MonoBehaviour
         MeshRenderer mesh_rend = gameObject.GetComponent<MeshRenderer>();
         mesh_rend.material = GameManager.blockColoursStatic[col_idx];
 
-       /* if (index > 0)
+        var avatars = avatar_manager.Avatars;
+
+        foreach (var avatar in avatars)
+        {
+            if (avatar.IsLocal)
+            {
+                local_avatar = avatar;
+            }
+        }
+
+        if (index > 0)
         {
             int prev_col_idx = colour_indexes[index - 1];
-            GameObject avatarNotAllowed = GameObject.FindGameObjectWithTag(colours[prev_col_idx]);
-            Physics.IgnoreCollision(gameObject.GetComponent<BoxCollider>(), avatarNotAllowed.gameObject.GetComponent<BoxCollider>(), false);
-        }*/
+            if (local_avatar.gameObject.tag == colours[prev_col_idx])
+            {
+                Physics.IgnoreCollision(GameObject.Find("Player").GetComponent<BoxCollider>(), gameObject.GetComponent<BoxCollider>(), false);
+            }
+        }
 
-        GameObject avatarAllowed = GameObject.FindGameObjectWithTag(colours[col_idx]);
-        Physics.IgnoreCollision(gameObject.GetComponent<BoxCollider>(), avatarAllowed.gameObject.GetComponent<BoxCollider>(), true);
+        if (local_avatar.gameObject.tag == colours[col_idx])
+        {
+            Physics.IgnoreCollision(GameObject.Find("Player").GetComponent<BoxCollider>(), gameObject.GetComponent<BoxCollider>(), true);
+        }        
     }
 }
