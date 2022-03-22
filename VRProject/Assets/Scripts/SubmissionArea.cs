@@ -28,7 +28,7 @@ public class SubmissionArea : MonoBehaviour
         {
             // if the structure isnt being held
             Block b = other.gameObject.GetComponent<Block>();
-            if (b != null && b.grasped == null && !alreadySubmitted.Contains(other.gameObject.name))
+            if (b != null && b.being_grasped == false && !alreadySubmitted.Contains(other.gameObject.name))
             {
                 // How many block were misplaced in the structure?
                 int correctBlocks = 0;

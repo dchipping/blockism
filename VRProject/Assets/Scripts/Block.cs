@@ -24,7 +24,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     private string last_owner_id;
 
-    private bool being_grasped = false;
+    public bool being_grasped = false;
 
     public Rigidbody rb;
 
