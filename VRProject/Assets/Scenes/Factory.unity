@@ -12992,13 +12992,13 @@ MonoBehaviour:
   blockColours:
   - {fileID: 2100000, guid: 503bc19ff60c748e49676ee31e63470f, type: 2}
   - {fileID: 2100000, guid: 946a2d48a3ad4477884a71252083d441, type: 2}
-  - {fileID: 2100000, guid: f9bc2cd1e2c4c4ea59fff93e026852bc, type: 2}
   - {fileID: 2100000, guid: 43270aea7633d413fbabf295631ab3cb, type: 2}
+  - {fileID: 2100000, guid: f9bc2cd1e2c4c4ea59fff93e026852bc, type: 2}
   bluePrintColours:
   - {fileID: 2100000, guid: a4118c6d2c2664df39e5dbb19ca9a98f, type: 2}
   - {fileID: 2100000, guid: fe10261735d304592b96fae7b532cebd, type: 2}
-  - {fileID: 2100000, guid: 8e9a0aa62c22b40a3bda63c9bfabb869, type: 2}
   - {fileID: 2100000, guid: 7a5fe959e7f1b42be9f63a2226491038, type: 2}
+  - {fileID: 2100000, guid: 8e9a0aa62c22b40a3bda63c9bfabb869, type: 2}
   allBlocks:
   - {fileID: 1692959389}
   - {fileID: 421161173}
