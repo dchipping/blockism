@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
     // Sound effects
     public List<AudioClip> clickSound;
     private static List<AudioClip> clickSoundsStatic;
+    public AudioClip gameOverSound;
+    private static AudioClip gameOverSoundStatic;
 
     // Materials
     public List<Material> blockColours;
@@ -70,6 +72,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         clickSoundsStatic = clickSound;
         blockColoursStatic = blockColours;
         allBlocksStatic = allBlocks;
+        gameOverSoundStatic = gameOverSound;
 
         role_manager = GameObject.Find("RoleManager").GetComponent<RoleManager>();
 
@@ -244,7 +247,10 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
             nextBlock.gameObject.transform.position = new Vector3(0, -9.5f, 8.75f);
         }
 
+        AudioSource.PlayClipAtPoint(gameOverSoundStatic, new Vector3(0,0,0));
+
         Clock.EndGame();
+        SubmissionArea.EndGame();
     }
 
     public void SendMessageUpdate()
