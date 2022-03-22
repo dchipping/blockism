@@ -25,10 +25,10 @@ public class BPRoomDoor : MonoBehaviour
 
     }
 
-    public void ChangeColour(int index)
+    public void ChangeColour(int lvl)
     {
-        index = (index - 1) % GameManager.numOfPlayers;
-        int col_idx = colour_indexes[index];
+        int currIndex = (lvl - 1) % GameManager.numOfPlayers;
+        int col_idx = colour_indexes[currIndex];
         MeshRenderer mesh_rend = gameObject.GetComponent<MeshRenderer>();
         mesh_rend.material = GameManager.blockColoursStatic[col_idx];
 
@@ -42,9 +42,9 @@ public class BPRoomDoor : MonoBehaviour
             }
         }
 
-        if (index > 0)
+        if (GameManager.currLevel > 1)
         {
-            int prev_col_idx = colour_indexes[index - 1];
+            int prev_col_idx = colour_indexes[currIndex - 1 + GameManager.numOfPlayers];
             if (local_avatar.gameObject.tag == colours[prev_col_idx])
             {
                 Physics.IgnoreCollision(GameObject.Find("Player").GetComponent<BoxCollider>(), gameObject.GetComponent<BoxCollider>(), false);
