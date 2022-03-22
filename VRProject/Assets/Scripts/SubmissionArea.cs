@@ -54,6 +54,8 @@ public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
     void Start()
     {
         scoreText.text = "$0";
+        // Networking
+        context = NetworkScene.Register(this);
     }
 
     // Update is called once per frame
