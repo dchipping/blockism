@@ -344,6 +344,11 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         foreach (var avatar in avatars)
         {
+            if (avatar_ids.IndexOf(avatar.Peer.UUID) == -1)
+            {
+                continue; 
+            } 
+
             avatar.color = avatar_roles[avatar_ids.IndexOf(avatar.Peer.UUID)];
         
             if (avatar.Peer.UUID == room_client.Me.UUID)

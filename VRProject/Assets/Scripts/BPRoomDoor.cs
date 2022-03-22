@@ -4,20 +4,18 @@ using UnityEngine;
 
 public class BPRoomDoor : MonoBehaviour
 {
-    private List<string> colours;
+    private string[] colours = { "red", "yellow", "blue", "green" };
     private List<int> colour_indexes;
-    public Material doorColour;
 
-    RoleManager role_manager;
+    private RoleManager role_manager;
+    private Ubiq.Avatars.AvatarManager avatar_manager;
+    private Ubiq.Avatars.Avatar local_avatar = null;
 
     // Start is called before the first frame update
-    void Start()
+    public void Init()
     {
-        doorColour = GameManager.blockColoursStatic[0];
-        MeshRenderer mesh_rend = gameObject.GetComponent<MeshRenderer>();
-        mesh_rend.material = doorColour;
         role_manager = GameObject.Find("RoleManager").GetComponent<RoleManager>();
-        colours = role_manager.GetAvatarRoles();
+        avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
         colour_indexes = role_manager.GetAvatarColourIndexes();
     }
 
@@ -27,21 +25,35 @@ public class BPRoomDoor : MonoBehaviour
 
     }
 
-    public void ChangeColour(int index)
+    public void ChangeColour(int lvl)
     {
-        int col_idx = colour_indexes[index];
-        doorColour = GameManager.blockColoursStatic[col_idx];
+        int currIndex = (lvl - 1) % GameManager.numOfPlayers;
+        int col_idx = colour_indexes[currIndex];
         MeshRenderer mesh_rend = gameObject.GetComponent<MeshRenderer>();
-        mesh_rend.material = GameManager.blockColoursStatic[index];
+        mesh_rend.material = GameManager.blockColoursStatic[col_idx];
 
-        GameObject avatarAllowed = GameObject.FindGameObjectWithTag(colours[col_idx]);
-        Physics.IgnoreCollision(gameObject.GetComponent<BoxCollider>(), avatarAllowed.gameObject.GetComponent<BoxCollider>(), true);
+        var avatars = avatar_manager.Avatars;
 
-        if (index > 0)
+        foreach (var avatar in avatars)
         {
-            int prev_col_idx = colour_indexes[index-1];
-            GameObject avatarNotAllowed = GameObject.FindGameObjectWithTag(colours[prev_col_idx]);
-            Physics.IgnoreCollision(gameObject.GetComponent<BoxCollider>(), avatarNotAllowed.gameObject.GetComponent<BoxCollider>(), false);
+            if (avatar.IsLocal)
+            {
+                local_avatar = avatar;
+            }
         }
+
+        if (GameManager.currLevel > 1)
+        {
+            int prev_col_idx = colour_indexes[(currIndex - 1 + GameManager.numOfPlayers) % GameManager.numOfPlayers];
+            if (local_avatar.gameObject.tag == colours[prev_col_idx])
+            {
+                Physics.IgnoreCollision(GameObject.Find("Player").GetComponent<BoxCollider>(), gameObject.GetComponent<BoxCollider>(), false);
+            }
+        }
+
+        if (local_avatar.gameObject.tag == colours[col_idx])
+        {
+            Physics.IgnoreCollision(GameObject.Find("Player").GetComponent<BoxCollider>(), gameObject.GetComponent<BoxCollider>(), true);
+        }        
     }
 }

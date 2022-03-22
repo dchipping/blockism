@@ -145,8 +145,9 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         }
         currLevel = 0;
 
+        bPRoomDoorStatic.Init();
+
         NextLevel();
-        bPRoomDoorStatic.ChangeColour(0);
         StartCoroutine(SpawnBlocks());
     }
 
