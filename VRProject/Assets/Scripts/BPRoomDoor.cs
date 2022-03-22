@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BPRoomDoor : MonoBehaviour
 {
-    private List<string> colours;
+    private string[] colours = { "red", "yellow", "blue", "green" };
     private List<int> colour_indexes;
 
     private RoleManager role_manager;
@@ -16,7 +16,6 @@ public class BPRoomDoor : MonoBehaviour
     {
         role_manager = GameObject.Find("RoleManager").GetComponent<RoleManager>();
         avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
-        colours = role_manager.GetAvatarRoles();
         colour_indexes = role_manager.GetAvatarColourIndexes();
     }
 
