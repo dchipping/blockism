@@ -44,7 +44,7 @@ public class BPRoomDoor : MonoBehaviour
 
         if (GameManager.currLevel > 1)
         {
-            int prev_col_idx = colour_indexes[currIndex - 1 + GameManager.numOfPlayers];
+            int prev_col_idx = colour_indexes[(currIndex - 1 + GameManager.numOfPlayers) % GameManager.numOfPlayers];
             if (local_avatar.gameObject.tag == colours[prev_col_idx])
             {
                 Physics.IgnoreCollision(GameObject.Find("Player").GetComponent<BoxCollider>(), gameObject.GetComponent<BoxCollider>(), false);

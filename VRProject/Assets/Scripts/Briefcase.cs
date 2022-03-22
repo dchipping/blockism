@@ -21,6 +21,7 @@ public class Briefcase : MonoBehaviour, IUseable, IGraspable
     {
         if (!isStarted && gameManager != null)
         {
+            gameManager.SendMessageUpdate();
             gameManager.StartGame();
             isStarted = true;
             pointLight.intensity = 0f;
