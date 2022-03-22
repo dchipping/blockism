@@ -111,6 +111,8 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         {
             var avatars = avatar_manager.Avatars;
 
+            var ids_to_be_removed = new List<string>();
+
             foreach (var id in avatar_ids)
             {
                 bool id_found = false;
@@ -126,9 +128,12 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
                 if (!id_found)
                 {
-                    RemoveAvatarAndRole(id);
+                    ids_to_be_removed.Add(id);
                 }
             }
+
+            // remove the ids collected in above loop
+            ids_to_be_removed.ForEach((id) => RemoveAvatarAndRole(id));
 
             SendMessageUpdate();
         }
