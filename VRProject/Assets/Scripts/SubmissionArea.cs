@@ -71,7 +71,9 @@ public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
             Block b = other.gameObject.GetComponent<Block>();
             if (b != null && b.grasped != null && !alreadySubmitted.Contains(other.gameObject.name))
             {
+                b.Release();
                 int score = SubmitStructure(b.gameObject);
+                SendMessageUpdate(b, score);
             }
         }
     }
