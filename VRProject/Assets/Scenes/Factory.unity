@@ -2820,6 +2820,9 @@ MonoBehaviour:
   - {fileID: 1857444976}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &109945944
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3965,6 +3968,9 @@ MonoBehaviour:
   - {fileID: 639618082}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &170700775
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4078,6 +4084,9 @@ MonoBehaviour:
   - {fileID: 249131715}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &180285019
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4423,6 +4432,9 @@ MonoBehaviour:
   - {fileID: 142256389}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &213449556
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5433,7 +5445,7 @@ Transform:
   m_GameObject: {fileID: 255976336}
   m_LocalRotation: {x: -0.0000000218557, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.12, z: 0}
-  m_LocalScale: {x: 1.2, y: 0.2, z: 0.8}
+  m_LocalScale: {x: 1.2, y: 2, z: 0.8}
   m_Children: []
   m_Father: {fileID: 1441621574}
   m_RootOrder: 0
@@ -5813,6 +5825,9 @@ MonoBehaviour:
   - {fileID: 1692959387}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &267341179
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7267,6 +7282,9 @@ MonoBehaviour:
   - {fileID: 1035006774}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &323812467
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8833,6 +8851,9 @@ MonoBehaviour:
   - {fileID: 639618082}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &389264115
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9440,6 +9461,9 @@ MonoBehaviour:
   - {fileID: 1857444976}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &406393100
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13882,6 +13906,9 @@ MonoBehaviour:
   - {fileID: 639618082}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &662330682
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14388,6 +14415,9 @@ MonoBehaviour:
   - {fileID: 639618082}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &690403263
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14499,6 +14529,9 @@ MonoBehaviour:
   - {fileID: 1692959387}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &693482316
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15628,6 +15661,9 @@ MonoBehaviour:
   - {fileID: 249131715}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &766952901
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17314,6 +17350,9 @@ MonoBehaviour:
   - {fileID: 655570044}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &832877377
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17654,6 +17693,9 @@ MonoBehaviour:
   - {fileID: 606376459}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &858542714
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18049,6 +18091,9 @@ MonoBehaviour:
   - {fileID: 515720849}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &902437119
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19762,6 +19807,9 @@ MonoBehaviour:
   - {fileID: 1035006774}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &996011096
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19875,6 +19923,9 @@ MonoBehaviour:
   - {fileID: 249131715}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &997302750
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22980,6 +23031,9 @@ MonoBehaviour:
   - {fileID: 1035006774}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1191303730
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23446,6 +23500,9 @@ MonoBehaviour:
   - {fileID: 41752277}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1219430878
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23836,6 +23893,9 @@ MonoBehaviour:
   - {fileID: 41752277}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1245184182
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29248,6 +29308,9 @@ MonoBehaviour:
   - {fileID: 142256389}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1555122341
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29402,6 +29465,9 @@ MonoBehaviour:
   - {fileID: 41752277}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1560731741
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -29845,6 +29911,9 @@ MonoBehaviour:
   - {fileID: 1035006774}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1585226020
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30484,6 +30553,9 @@ MonoBehaviour:
   - {fileID: 249131715}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1604367216
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33259,6 +33331,9 @@ MonoBehaviour:
   - {fileID: 41752277}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1785545147
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33556,6 +33631,9 @@ MonoBehaviour:
   - {fileID: 1804086193}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1798252676
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33941,6 +34019,9 @@ MonoBehaviour:
   - {fileID: 1804086193}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1805167733
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34301,6 +34382,9 @@ MonoBehaviour:
   - {fileID: 1944018546}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1831297843
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -37930,6 +38014,9 @@ MonoBehaviour:
   - {fileID: 1804086193}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &1992586579
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -40221,6 +40308,9 @@ MonoBehaviour:
   - {fileID: 1804086193}
   filled: 0
   correctColourIdx: 0
+  shared_id:
+    a: 0
+    b: 0
 --- !u!65 &2077012985
 BoxCollider:
   m_ObjectHideFlags: 0
