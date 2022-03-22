@@ -347,4 +347,9 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
             avatar_roles_indexs.Add(roles.IndexOf(avatar_role));
         return avatar_roles_indexs;
     }
+
+    public List<string> GetAvatarRoles()
+    {
+        return avatar_roles;
+    }
 }
