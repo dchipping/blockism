@@ -2,8 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Ubiq.Messaging;
+using Ubiq.XR;
+using Ubiq.Rooms;
 
-public class HitBox : MonoBehaviour
+public class HitBox : MonoBehaviour, INetworkComponent, INetworkObject
 {
 
     private GameObject thisHitBox;
@@ -13,6 +16,46 @@ public class HitBox : MonoBehaviour
     public bool filled = false;
     public int correctColourIdx;
 
+    public NetworkId shared_id;
+    private NetworkContext context;
+    // 16-digit hex
+    NetworkId INetworkObject.Id => new NetworkId("f8cdba13a15f5e6d");
+
+    struct Message
+    {
+        public NetworkId who;
+        public NetworkId blockId;
+
+        public Message(NetworkId who, NetworkId blockId)
+        {
+            this.who = who;
+            this.blockId = blockId;
+        }
+    }
+
+    void INetworkComponent.ProcessMessage(ReferenceCountedSceneGraphMessage message)
+    {
+        var msg = message.FromJson<Message>();
+        if (msg.who == shared_id)
+        {
+            NetworkId blockId = msg.blockId;
+            foreach (Block b in GameManager.allBlocksStatic)
+            {
+                if (b.shared_id == blockId)
+                {
+                    FillHitBox(b.gameObject);
+                }
+            }
+        }
+    }
+
+    public void SendMessageUpdate(Block block)
+    {
+        Message message;
+        message.who = shared_id;
+        message.blockId = block.shared_id;
+        context.SendJson(message);
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +71,12 @@ public class HitBox : MonoBehaviour
         if (thisHitBox != null)
             thisCollider = thisHitBox.GetComponent<Collider>();
 
+        // Networking
+        context = NetworkScene.Register(this);
+        shared_id = new NetworkId((uint)(Math.Pow(10, 3) * (transform.position.x +
+                                transform.position.y +
+                                transform.position.z)));
+
     }
 
     // Update is called once per frame
@@ -40,6 +89,7 @@ public class HitBox : MonoBehaviour
             Block parentBlock = transform.parent.GetComponent<Block>();
             if (GetIntersectionPercent(collider, thisCollider) > 0.5 && !filled && !block.filling && (parentBlock.grasped != null || block.grasped != null))
             {
+                SendMessageUpdate(block);
                 FillHitBox(pieces[i]);
                 if (transform.childCount > 0)
                     filled = true;

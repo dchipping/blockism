@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     // A list of all blocks in the game world
     public List<Block> allBlocks;
-    private static List<Block> allBlocksStatic;
+    public static List<Block> allBlocksStatic;
 
     // A list of all blue print blocks in the game world
     public List<MeshRenderer> bluePrintBlocks;
@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
     // Event that randomly changes roles of the players 
     UnityEvent role_change;
 
-    RoleManager role_manager; 
+    RoleManager role_manager;
 
     public static int score = 0;
     public static Queue<Block> conveyerQueue = new Queue<Block>();
@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     struct Message
@@ -127,7 +127,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
             int colourIdx = colours[avatarIdx];
             allBlocksStatic[i].SetColour(colourIdx);
 
-            
+
             // Tell blue print blocks what materials they should use
             bluePrintBlocks[i].material = bluePrintColours[colourIdx];
 
@@ -163,7 +163,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
             }
             yield return new WaitForSeconds(2);
         }
-        
+
     }
 
 
@@ -172,7 +172,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
     {
         // Get random audio clip
         var random = new System.Random();
-        int index = random.Next(clickSoundsStatic.Count-1);
+        int index = random.Next(clickSoundsStatic.Count - 1);
 
         // Play clicking sound
         AudioSource.PlayClipAtPoint(clickSoundsStatic[index], position);
