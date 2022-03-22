@@ -24,27 +24,23 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     NetworkId INetworkObject.Id => new NetworkId("a15ca05dbb9ef8ec");
 
-    private string room_name = "Blockism";
+    private string room_id;
 
     private static System.Random rng;
-
-    private uint discover_rooms_count = 0;
-
-    private float room_refresh_rate = 2.0f;
-
-    private float next_room_refresh_time = -1;
 
     struct Message
     {
         public List<string> avatar_ids;
         public List<string> avatar_roles;
         public string master_peer_id;
+        public string room_id;
 
         public Message(List<string> ai, List<string> ar, string mpi, string rid)
         {
             this.avatar_ids = ai;
             this.avatar_roles = ar;
             this.master_peer_id = mpi;
+            this.room_id = rid;
         }
     }
 
@@ -63,14 +59,14 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         /*room_client.OnRoomUpdated.AddListener(OnRoomUpdated);*/
 
-        room_client.OnRoomsDiscovered.AddListener(OnRoomsDiscovered);
+        /*room_client.OnRoomsDiscovered.AddListener(OnRoomsDiscovered);*/
 
         avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
     }
 
     void Update()
     {
-        if (Time.realtimeSinceStartup > next_room_refresh_time)
+        /*if (Time.realtimeSinceStartup > next_room_refresh_time)
         {
             next_room_refresh_time = Time.realtimeSinceStartup + room_refresh_rate;
 
@@ -82,10 +78,10 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
             {
                 room_client.Join(name: room_name, publish: true);
             }
-        }
+        }*/
 
         // check if master peer has left and pick a new one 
-        if (room_client.Room.Name == room_name && !string.IsNullOrEmpty(master_peer_id))
+        if (room_client.Room.Name == room_id && !string.IsNullOrEmpty(master_peer_id))
         {
             var avatars = avatar_manager.Avatars;
             bool found_master = false; 
@@ -112,7 +108,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         }
 
         // check if the a peer has left and update lists if they have (only for master peer)
-        if ((room_client.Room.Name == room_name) && (room_client.Me.UUID == master_peer_id))
+        if ((room_client.Room.Name == room_id) && (room_client.Me.UUID == master_peer_id))
         {
             var avatars = avatar_manager.Avatars;
 
@@ -141,7 +137,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         }
     }
 
-    private void OnRoomsDiscovered(List<IRoom> rooms, RoomsDiscoveredRequest request)
+    /*private void OnRoomsDiscovered(List<IRoom> rooms, RoomsDiscoveredRequest request)
     {
         if (string.IsNullOrEmpty(request.joincode))
         {
@@ -153,7 +149,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
                 }
             }
         }
-    }
+    }*/
 
     private void AddAvatarAndRole(Ubiq.Avatars.Avatar avatar)
     {
@@ -207,6 +203,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
         message.avatar_ids = avatar_ids;
         message.avatar_roles = avatar_roles;
         message.master_peer_id = master_peer_id;
+        message.room_id = room_id;
 
         context.SendJson(message);
     }
@@ -243,6 +240,7 @@ public class RoleManager : MonoBehaviour, INetworkComponent, INetworkObject
 
         avatar_ids.Add(owner_avatar.Peer.UUID);
         avatar_roles.Add(owner_avatar.color);
+        room_id = room.UUID;
 
         SendMessageUpdate();
     }
