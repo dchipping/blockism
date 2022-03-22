@@ -76,7 +76,7 @@ public class HitBox : MonoBehaviour, INetworkComponent, INetworkObject
         context = NetworkScene.Register(this);
         shared_id = new NetworkId((uint)(Math.Pow(10, 3) * (transform.position.x +
                                 transform.position.y +
-                                transform.position.z)));
+                                Math.Pow(10, 2) * transform.position.z)));
 
     }
 
