@@ -155,12 +155,27 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     public void Release()
     {
+        bool outOfRange = HandOutOfRange(grasped);
         grasped = null;
         being_grasped = false;
 
         this.rootBlock.rb.isKinematic = false;
 
-        SendMessageUpdate();
+        if (outOfRange)
+        {
+            rootBlock.transform.position = new Vector3(0, 1, 0);
+            rootBlock.transform.rotation = new Quaternion(0, 0, 0, 0);
+        }
+            SendMessageUpdate();
+    }
+
+    private bool HandOutOfRange(Hand grasped)
+    {
+        return grasped.transform.position[0] > 6
+            || grasped.transform.position[0] < -5
+            || grasped.transform.position[1] < 0.3
+            || grasped.transform.position[2] > 5.5
+            || grasped.transform.position[2] < -14;
     }
 
     // Update is called once per frame
