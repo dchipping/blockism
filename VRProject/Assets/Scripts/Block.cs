@@ -166,7 +166,8 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
             rootBlock.transform.position = new Vector3(0, 1, 0);
             rootBlock.transform.rotation = new Quaternion(0, 0, 0, 0);
         }
-            SendMessageUpdate();
+        
+        SendMessageUpdate();
     }
 
     private bool HandOutOfRange(Hand grasped)
