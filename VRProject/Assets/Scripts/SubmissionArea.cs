@@ -9,6 +9,7 @@ using Ubiq.Rooms;
 public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
 {
     public TMPro.TextMeshProUGUI scoreText;
+    public static TMPro.TextMeshProUGUI scoreTextStatic;
     int submittedStructures = 0;
     List<string> alreadySubmitted = new List<string>();
 
@@ -54,6 +55,7 @@ public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
     void Start()
     {
         scoreText.text = "$0";
+        scoreTextStatic = scoreText;
         // Networking
         context = NetworkScene.Register(this);
     }
@@ -78,6 +80,12 @@ public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
                 SendMessageUpdate(b, score);
             }
         }
+    }
+
+    public static void EndGame()
+    {
+        scoreTextStatic.fontSize = 0.3f;
+        scoreTextStatic.text = "GAME OVER $" + (GameManager.score * 10).ToString();
     }
 
     private void SubmitStructure(GameObject other, int score)

@@ -72,7 +72,7 @@
 ---
 
 ## Environment Layout
-![layout](layout.png)
+![layout](../imgs/layout.png)
 ---
 
 ## Archived Ideas

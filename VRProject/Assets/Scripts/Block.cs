@@ -155,19 +155,39 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     public void Release()
     {
+        if (grasped)
+        {
+            bool outOfRange = HandOutOfRange(grasped);
+
+            if (outOfRange)
+            {
+                rootBlock.transform.position = new Vector3(0, 1, 0);
+                rootBlock.transform.rotation = new Quaternion(0, 0, 0, 0);
+            }
+        } 
+  
         grasped = null;
         rootBlock.being_grasped = false;
 
         this.rootBlock.rb.isKinematic = false;
-
+        
         SendMessageUpdate();
+    }
+
+    private bool HandOutOfRange(Hand grasped)
+    {
+        return grasped.transform.position[0] > 6
+            || grasped.transform.position[0] < -5
+            || grasped.transform.position[1] < 0.3
+            || grasped.transform.position[2] > 5.5
+            || grasped.transform.position[2] < -14;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         // If the block is held by a player
-        if (rootBlock.being_grasped && grasped)
+        if (being_grasped && grasped && last_owner_id == client.Me.UUID)
         {
             // Match the position and orientation of the hand
             rootBlock.transform.position = grasped.transform.position;
