@@ -20,8 +20,10 @@ public class Conveyor : MonoBehaviour
         List<string> alreadyUpdated = new List<string>();
         for (int i = 0; i < onBelt.Count; i++)
         {
+            // if statment stops objects with multiple children being moved multiple times
             if (!alreadyUpdated.Contains(onBelt[i].name))
             {
+                // Moves objects along the conveyer
                 onBelt[i].transform.position += (speed * direction * Time.deltaTime);
                 alreadyUpdated.Add(onBelt[i].name);
             }

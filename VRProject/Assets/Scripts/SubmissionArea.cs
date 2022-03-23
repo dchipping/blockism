@@ -8,8 +8,11 @@ using Ubiq.Rooms;
 
 public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
 {
+    //Score board components
     public TMPro.TextMeshProUGUI scoreText;
     public static TMPro.TextMeshProUGUI scoreTextStatic;
+
+    // Info about whats been submitted
     int submittedStructures = 0;
     List<string> alreadySubmitted = new List<string>();
 
@@ -17,6 +20,7 @@ public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
     private NetworkContext context;
     NetworkId INetworkObject.Id => new NetworkId("58e19a43a15f5f1a");
 
+    // Network message containing info about the block submitted and its score
     struct Message
     {
         public NetworkId blockId;
@@ -33,10 +37,12 @@ public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
     {
         var msg = message.FromJson<Message>();
         NetworkId blockId = msg.blockId;
+        // The block via its shared network id
         foreach (Block b in GameManager.allBlocksStatic)
         {
             if (b.shared_id == blockId)
             {
+                // Move the structure out of factory and change score
                 SubmitStructure(b.gameObject, msg.score);
                 break;
             }
@@ -45,6 +51,7 @@ public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
 
     public void SendMessageUpdate(Block block, int score)
     {
+        // Tell other player which structure has been submitted and the score
         Message message;
         message.blockId = block.shared_id;
         message.score = score;
@@ -75,8 +82,11 @@ public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
             Block b = other.gameObject.GetComponent<Block>();
             if (b != null && b.grasped != null && !alreadySubmitted.Contains(other.gameObject.name))
             {
+                //Removes grasp
                 b.Release();
+                // calculates score and move object out of factory
                 int score = SubmitStructure(b.gameObject);
+                // communate the score to other players
                 SendMessageUpdate(b, score);
             }
         }
@@ -84,6 +94,7 @@ public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
 
     public static void EndGame()
     {
+        // Set game over text on score board
         scoreTextStatic.fontSize = 0.3f;
         scoreTextStatic.text = "GAME OVER $" + (GameManager.score * 10).ToString();
     }
@@ -107,6 +118,7 @@ public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
             GameManager.NextLevel();
         }
 
+        // Stops objects with many children submitting many times
         alreadySubmitted.Add(other.name);
     }
 
@@ -118,6 +130,7 @@ public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
         {
             foreach (Transform child in other.transform)
             {
+                // Count the number of correctly places blocks by compairing the hitbox colour to the colour of its child block
                 HitBox hb = child.gameObject.GetComponent<HitBox>();
                 if (hb != null)
                 {
@@ -132,6 +145,7 @@ public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
         }
         else
         {
+            // Table will always have two correct blocks because of the symettry of the structure
             correctBlocks = 2;
         }
 
@@ -150,6 +164,7 @@ public class SubmissionArea : MonoBehaviour, INetworkComponent, INetworkObject
             GameManager.NextLevel();
         }
 
+        // Stops objects with many children submitting many times
         alreadySubmitted.Add(other.name);
 
         return correctBlocks;

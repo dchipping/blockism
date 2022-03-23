@@ -42,17 +42,17 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     // Game state
     public static int numOfPlayers = 4;
+    public static int score = 0;
+    // Current level
+    public static int currLevel;
 
     // Event that randomly changes roles of the players 
     UnityEvent role_change;
-
     RoleManager role_manager;
 
-    public static int score = 0;
+    // Queue containing objects to be spawned on the conveyer belt
     public static Queue<Block> conveyerQueue = new Queue<Block>();
 
-    // Current level
-    public static int currLevel;
 
     // Networking components
     NetworkId INetworkObject.Id => new NetworkId("a13ba05dbb9ef8fc");
@@ -73,17 +73,15 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         blockColoursStatic = blockColours;
         allBlocksStatic = allBlocks;
         gameOverSoundStatic = gameOverSound;
-
-        role_manager = GameObject.Find("RoleManager").GetComponent<RoleManager>();
-
-        role_change = new UnityEvent();
-        role_change.AddListener(OnRoleChange);
-
         bluePrintsStatic = bluePrints;
         bluePrintBlocksStatic = bluePrintBlocks;
         hitboxesStatic = hitboxes;
-
         bPRoomDoorStatic = bPRoomDoor;
+
+        // Set up role components
+        role_manager = GameObject.Find("RoleManager").GetComponent<RoleManager>();
+        role_change = new UnityEvent();
+        role_change.AddListener(OnRoleChange);
     }
 
     void OnRoleChange()
@@ -97,6 +95,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     }
 
+    // Message sent to everyone to start the game
     struct Message
     {
         public bool start;
@@ -110,6 +109,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
     public void StartGame()
     {
         Debug.Log("Starting Game!");
+        // Remove any unnecessary signs in the environment
         foreach (GameObject sign in helperSignsStatic) // Loop through List with foreach
         {
             Destroy(sign);
@@ -146,24 +146,29 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
                 hitboxes[i].correctColourIdx = colourIdx;
 
         }
+        // Set up level 1
         currLevel = 0;
-
         bPRoomDoorStatic.Init();
-
         NextLevel();
+
+        // Start the conveyer belt
         StartCoroutine(SpawnBlocks());
     }
 
     // Unity allows to use Start as IEnumerator instead of a void
     private IEnumerator SpawnBlocks()
     {
+        // Loops inifitly
         while (true)
         {
+            // If there are objects in the conveyer belt queue, spawn it at the start of the conveyer belt
             if (conveyerQueue.Count > 0)
             {
                 Block nextBlock = conveyerQueue.Dequeue();
                 nextBlock.gameObject.transform.position = new Vector3(-7, 1.35f, 8.75f);
             }
+
+            // Pause for 2 seconds
             yield return new WaitForSeconds(2);
         }
 
@@ -183,15 +188,22 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     public static void NextLevel()
     {
+        // Increase level number
         currLevel++;
+
+        // Reset the clock to 3 minutes
         Clock.ResetClock();
+
+        // Change which blueprint are visible
         foreach (BluePrint bp in bluePrintsStatic)
         {
             bp.UpdateVisibility();
         }
 
+        // Change who is allowed inside the blue print room
         bPRoomDoorStatic.ChangeColour(currLevel);
 
+        // Call the approapriate level method
         if (currLevel == 1)
             Level1();
         else if (currLevel == 2)
@@ -204,55 +216,66 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
 
     private static void Level1()
     {
+        // Clear conveyer belt queue
         conveyerQueue.Clear();
 
+        // Add level 1 blocks to the conveyer belt queue
         for (int i = 0; i < 3; i++)
             conveyerQueue.Enqueue(allBlocksStatic[i]);
     }
 
     private static void Level2()
     {
-
+        // Clear conveyer belt queue
         conveyerQueue.Clear();
 
+        // Move all level 1 blocks away from the play area
         for (int i = 0; i < 3; i++)
         {
             Block nextBlock = allBlocksStatic[i].GetComponent<Block>();
             nextBlock.gameObject.transform.position = new Vector3(0, -9.5f, 8.75f);
         }
 
+        // Add level 2 blocks to the conveyer belt queue
         for (int i = 3; i < 15; i++)
             conveyerQueue.Enqueue(allBlocksStatic[i]);
     }
 
     private static void Level3()
     {
+        // Clear conveyer belt queue
         conveyerQueue.Clear();
 
+        // Move all level 2 blocks away from the play area
         for (int i = 3; i < 15; i++)
         {
             Block nextBlock = allBlocksStatic[i].GetComponent<Block>();
             nextBlock.gameObject.transform.position = new Vector3(0, -9.5f, 8.75f);
         }
 
+        // Add level 3 blocks to the conveyer belt queue
         for (int i = 15; i < 30; i++)
             conveyerQueue.Enqueue(allBlocksStatic[i]);
     }
 
     private static void EndGame()
     {
+        // Move all level 3 blocks away from the play area
         for (int i = 15; i < 30; i++)
         {
             Block nextBlock = allBlocksStatic[i].GetComponent<Block>();
             nextBlock.gameObject.transform.position = new Vector3(0, -9.5f, 8.75f);
         }
 
+        // Player a sounds to indicate the game is complete
         AudioSource.PlayClipAtPoint(gameOverSoundStatic, new Vector3(0,0,0));
 
+        // Change text on score board and clock
         Clock.EndGame();
         SubmissionArea.EndGame();
     }
 
+    // Send start game message
     public void SendMessageUpdate()
     {
         Message startMessage = new Message(true);
@@ -260,6 +283,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         context.SendJson(startMessage);
     }
 
+    // Receive message that start the game
     public void ProcessMessage(ReferenceCountedSceneGraphMessage message)
     {
         var msg = message.FromJson<Message>();

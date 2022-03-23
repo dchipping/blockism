@@ -14,11 +14,13 @@ public class Briefcase : MonoBehaviour, IUseable, IGraspable
 
     public void Start()
     {
+        // Find game manager object in scene
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     public void Use(Hand controller)
     {
+        // Start the game if not already started
         if (!isStarted && gameManager != null)
         {
             gameManager.SendMessageUpdate();
@@ -35,6 +37,7 @@ public class Briefcase : MonoBehaviour, IUseable, IGraspable
 
     public void Grasp(Hand controller)
     {
+        // Start the game if not already started
         if (!isStarted)
         {
             gameManager.SendMessageUpdate();
@@ -51,6 +54,7 @@ public class Briefcase : MonoBehaviour, IUseable, IGraspable
 
     public void FixedUpdate()
     {
+        // Make light pulse
         if (!isStarted)
         {
             pointLight.intensity = 3f * Mathf.Abs(Mathf.Sin(Time.time));

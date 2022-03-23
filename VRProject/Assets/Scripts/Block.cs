@@ -38,6 +38,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     private Ubiq.Avatars.Avatar local_avatar = null; 
 
+    // Block messaged used to communicate position, ownership and physics
     struct Message
     {
         public NetworkId who;
@@ -58,6 +59,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         }
     }
 
+    // Update block transform, ownership and physics
     void INetworkComponent.ProcessMessage(ReferenceCountedSceneGraphMessage message)
     {
         var msg = message.FromJson<Message>();
@@ -77,6 +79,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
     // Start is called before the first frame update
     void Start()
     {
+        // Set up networking componenets
         context = NetworkScene.Register(this);
 
         client = context.scene.GetComponentInChildren<RoomClient>();
@@ -87,13 +90,17 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
                                         transform.position.y +
                                         transform.position.z)));
 
+        // Initialize the rigid body
         rb = GetComponent<Rigidbody>();
 
+        // Root block is always initally itself
         rootBlock = this;
 
+        // Find the avatar manager in the scene (used to determine which blocks can be picked up)
         avatar_manager = GameObject.Find("Avatar Manager").GetComponent<Ubiq.Avatars.AvatarManager>();
     }
 
+    // Send info about block transform, ownership and physics
     public void SendMessageUpdate()
     {
         Message message;
@@ -103,10 +110,10 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
         message.being_grasped = being_grasped;
         message.last_owner_id = last_owner_id;
         message.is_kinematic = rootBlock.rb.isKinematic;
-
         context.SendJson(message);
     }
 
+    // Called when a new player joins the room
     private void OnPeerAdded(IPeer peer)
     {
 
@@ -118,13 +125,14 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     void IGraspable.Grasp(Hand controller)
     {
+        // If the block is already being grasped then it cant be grasped again
         if (being_grasped)
         {
             return;
         }
 
+        // Find the local avatar (the player on this computer)
         var avatars = avatar_manager.Avatars;
-
         foreach (var avatar in avatars)
         {
             if (avatar.IsLocal)
@@ -133,17 +141,23 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
             }
         }
 
+        // If the block is the wrong colour, it cannot be picked up
         if (!color.Contains(local_avatar.color) || string.IsNullOrEmpty(local_avatar.color))
         {
             return;
         }
 
+        // Update grasp information 
         grasped = controller;
         being_grasped = true;
+
+        // Turn off gravity when being held
         rootBlock.rb.isKinematic = true;
 
+        // Update the most recent owner
         last_owner_id = client.Me.UUID;
 
+        // Send message to all other peers
         SendMessageUpdate();
 
     }
@@ -155,6 +169,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     public void Release()
     {
+        // Stops objects from falling out of the world
         if (grasped)
         {
             bool outOfRange = HandOutOfRange(grasped);
@@ -165,12 +180,15 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
                 rootBlock.transform.rotation = new Quaternion(0, 0, 0, 0);
             }
         } 
-  
+
+        // Remove grasp info
         grasped = null;
         being_grasped = false;
 
+        // Turn gravity back on
         this.rootBlock.rb.isKinematic = false;
-        
+
+        // Send block info to other peers
         SendMessageUpdate();
     }
 
@@ -197,6 +215,7 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
             SendMessageUpdate();
         }
 
+        // Brute force approach to ensure that connecting blocks stay in the correct position
         if (filling)
         {
             transform.localPosition = new Vector3(0, 0, 0);
