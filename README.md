@@ -37,7 +37,7 @@ TBC
 - [Daniel Chipping](https://github.com/dchipping) 
 
 ### Public Unity Assets
-- [Low Poly Storage Pack](https://assetstore.unity.com/publishers/12124): Broken Vector
+- [Low Poly Storage Pack](https://assetstore.unity.com/packages/3d/environments/urban/low-poly-storage-pack-101732): Broken Vector
 - [Low Poly Forklift](https://assetstore.unity.com/packages/3d/props/industrial/low-poly-forklift-176653): Polygon-Park
 - [Polygon Starter Pack](https://assetstore.unity.com/packages/3d/props/polygon-starter-pack-low-poly-3d-art-by-synty-156819): Synty Studios
 - [Veichles PolyPack](https://assetstore.unity.com/packages/3d/vehicles/vehicles-polypack-187691): Alstra Infinite
