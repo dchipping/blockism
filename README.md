@@ -36,7 +36,7 @@ TBC
 - [Praveen Selvaraj](https://github.com/pravsels)
 - [Daniel Chipping](https://github.com/dchipping) 
 
-### Public Domain Unity Assets
+### Public Unity Assets
 - [Low Poly Storage Pack](https://assetstore.unity.com/publishers/12124): Broken Vector
 - [Low Poly Forklift](https://assetstore.unity.com/packages/3d/props/industrial/low-poly-forklift-176653): Polygon-Park
 - [Polygon Starter Pack](https://assetstore.unity.com/packages/3d/props/polygon-starter-pack-low-poly-3d-art-by-synty-156819): Synty Studios
