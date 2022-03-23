@@ -19,12 +19,7 @@ TBC
 #### Oculus Touch Controls:
 <img src="imgs/oculus-touch-controls.png" alt="drawing" width="300"/>
 
-### Desktop
-```bash
-TBC
-```
-
-### Unity Editor
+### Desktop/Unity Editor
 ```bash
 TBC
 ```
@@ -45,4 +40,4 @@ TBC
 - [Polyonal's Low-Poly Particle Pack](https://assetstore.unity.com/packages/vfx/particles/polygonal-s-low-poly-particle-pack-118355): Polygonal Stuff
 
 ### Techical Assistance
-- TBD
+- Daniele Giunchi
