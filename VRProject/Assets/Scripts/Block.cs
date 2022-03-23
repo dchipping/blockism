@@ -194,11 +194,11 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     private bool HandOutOfRange(Hand grasped)
     {
-        return grasped.transform.position[0] > 6
-            || grasped.transform.position[0] < -5
+        return grasped.transform.position[0] > 10
+            || grasped.transform.position[0] < -9
             || grasped.transform.position[1] < 0.3
-            || grasped.transform.position[2] > 5.5
-            || grasped.transform.position[2] < -14;
+            || grasped.transform.position[2] > 9.5
+            || grasped.transform.position[2] < -18;
     }
 
     // Update is called once per frame

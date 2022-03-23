@@ -233,6 +233,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         for (int i = 0; i < 3; i++)
         {
             Block nextBlock = allBlocksStatic[i].GetComponent<Block>();
+            nextBlock.Release();
             nextBlock.gameObject.transform.position = new Vector3(0, -9.5f, 8.75f);
         }
 
@@ -250,6 +251,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         for (int i = 3; i < 15; i++)
         {
             Block nextBlock = allBlocksStatic[i].GetComponent<Block>();
+            nextBlock.Release();
             nextBlock.gameObject.transform.position = new Vector3(0, -9.5f, 8.75f);
         }
 
@@ -264,6 +266,7 @@ public class GameManager : MonoBehaviour, INetworkComponent, INetworkObject
         for (int i = 15; i < 30; i++)
         {
             Block nextBlock = allBlocksStatic[i].GetComponent<Block>();
+            nextBlock.Release();
             nextBlock.gameObject.transform.position = new Vector3(0, -9.5f, 8.75f);
         }
 
