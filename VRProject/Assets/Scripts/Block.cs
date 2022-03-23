@@ -155,20 +155,21 @@ public class Block : MonoBehaviour, IGraspable, INetworkComponent, INetworkObjec
 
     public void Release()
     {
-        if (!grasped)
-            return; 
+        if (grasped)
+        {
+            bool outOfRange = HandOutOfRange(grasped);
 
-        bool outOfRange = HandOutOfRange(grasped);
+            if (outOfRange)
+            {
+                rootBlock.transform.position = new Vector3(0, 1, 0);
+                rootBlock.transform.rotation = new Quaternion(0, 0, 0, 0);
+            }
+        } 
+  
         grasped = null;
         being_grasped = false;
 
         this.rootBlock.rb.isKinematic = false;
-
-        if (outOfRange)
-        {
-            rootBlock.transform.position = new Vector3(0, 1, 0);
-            rootBlock.transform.rotation = new Quaternion(0, 0, 0, 0);
-        }
         
         SendMessageUpdate();
     }
