@@ -1,12 +1,12 @@
 # Blockism: A social VR building game
 
-![cover_photo](factory-overview.png)
+![cover_photo](/imgs/factory-overview.png)
 
 Collaboration is key! This is a social virtual reality building game where players work together to build structures and score points before time runs out. The game is built within the Unity ecosystem along with the [Ubiq](https://github.com/UCL-VR/ubiq) library for networking support.
 
 ## Overview
-<img src="oculus-touch-controls.png" 
-alt="drawing" width="400"/><img src="oculus-touch-controls.png" alt="drawing" width="400"/>
+<img src="imgs/scene-overview.png" 
+alt="drawing" width="400"/><img src="imgs/people.png" alt="drawing" width="400"/>
 
 Set in a fictional factory, each player is given a colour; red, yellow, green, or blue. Once all players are present, the game begins by touching the suitcase. When the game starts the conveyer belt will present blocks of assorted colours to the players. The colours of these blocks correspond to the player colours that are in the game. Players are only able to pick their own-coloured blocks, which are then combined to create structures. The colour mechanic forces players to build structures together. Once a structure is complete it may then be dropped-off at the submission zone to score points.
 
@@ -17,7 +17,7 @@ Set in a fictional factory, each player is given a colour; red, yellow, green, o
 TBC
 ```
 #### Oculus Touch Controls:
-<img src="oculus-touch-controls.png" alt="drawing" width="300"/>
+<img src="imgs/oculus-touch-controls.png" alt="drawing" width="300"/>
 
 ### Desktop
 ```bash
