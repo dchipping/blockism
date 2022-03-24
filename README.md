@@ -16,9 +16,9 @@ Set in a fictional factory, each player is given a colour; red, yellow, green, o
 ```bash
 Step 1: Go to the Unity Editor -> Build Settings
 Step 2: Select Scenes/Factory to build
-Step 2: Select Android and build the APK
-Step 3: Deploy to APK to the Oculus
-Step 4: Go to All Apps -> Unkown Sources -> com.Blockism.Blockism
+Step 3: Select Android and build the APK
+Step 4: Deploy to APK to the Oculus
+Step 5: Go to All Apps -> Unkown Sources -> com.Blockism.Blockism
 ```
 #### Oculus Touch Controls:
 <img src="imgs/oculus-touch-controls.png" alt="drawing" width="300"/>
