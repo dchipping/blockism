@@ -46,5 +46,5 @@ Step 4: Run the executable file locally
 - [Low Poly Office Props Lite](https://assetstore.unity.com/packages/3d/environments/low-poly-office-props-lite-131438): Robert Ramsay
 - [Polyonal's Low-Poly Particle Pack](https://assetstore.unity.com/packages/vfx/particles/polygonal-s-low-poly-particle-pack-118355): Polygonal Stuff
 
-### Techical Assistance
+### Technical Assistance
 - Daniele Giunchi
